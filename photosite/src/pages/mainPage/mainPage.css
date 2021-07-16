@@ -1,0 +1,28 @@
+
+.mainPageBody .mainPageHeader{
+    width: 98%;
+    height: 150px;
+    background-color:rgb(228, 191, 124);
+    margin: auto;
+    margin-top: 10px;
+}
+.mainPageBody .mainPageContent{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 95%;
+    height: 600px;
+    background-color:coral;
+    margin: auto;
+    margin-top: -45px;
+    overflow: hidden;
+}
+
+.mainPageBody .mainPageContent img{
+    transition: .5s;
+    min-width: 100%;
+    height: 100%;
+    object-fit: cover;  
+    position: absolute;
+    
+}
