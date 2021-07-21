@@ -1,6 +1,9 @@
+
 .AppBar{
     width: 100%;
-    position: relative;
+    position: fixed;
+    top:0;
+    z-index:3;
     display: flex;
     justify-content: center;
     background-color: rgb(75, 114, 187);
@@ -58,18 +61,6 @@
         transform: rotate(-45deg);
     }
 }
-/* @keyframes burgerAnimationFirstLineReturn {
-    to{
-        top:0px;
-        transform: rotate(0deg);
-    }
-}
-@keyframes burgerAnimationThirdLineReturn {
-    to{
-        top:100%;
-        transform: rotate(0deg);
-    }
-} */
 @media (max-width:550px){
     .AppBar .sectionsMenu{
         transform: translateX(-150px);
@@ -99,7 +90,3 @@
     }
 }
 
-.active{
-    
- 
-}

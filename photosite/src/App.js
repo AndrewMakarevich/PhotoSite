@@ -9,8 +9,6 @@ import AnimateSlider from './pages/mainPage/photoAnimation';
 
 function App() {
 
-
-
     return (
       
       <BrowserRouter>

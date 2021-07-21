@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', function(){
                 sectionsMenu.forEach(section =>{
                     section.style.display="none";
                 });
-                appBar.style.height = "35px";
+                appBar.style.height = "45px";
                 sections.style.transform = "translateX(-150px)";
             }
             
@@ -38,7 +38,7 @@ window.addEventListener('DOMContentLoaded', function(){
             if(window.innerWidth>550){
                 sectionsMenu.forEach(section =>{
                     section.style.display="";
-                    appBar.style.height = "45px";
+                    appBar.style.height = "55px";
                     
                 });
                 active = false;
@@ -47,6 +47,7 @@ window.addEventListener('DOMContentLoaded', function(){
                 lines[2].style.animation = "none";
             }else{
                 sectionsMenu.forEach(section =>{
+                    appBar.style.height = "45px";
                     section.style.display="none";
                 });
             }
