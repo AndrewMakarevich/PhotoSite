@@ -5,12 +5,14 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import UserStore from './store/userStore';
+import AboutUsStore from './store/aboutUsStore';
 
-export const Context =createContext(null);
+export const Context = createContext(null);
 
 ReactDOM.render(
   <Context.Provider value={{
-    "user": new UserStore()
+    "user": new UserStore(),
+    "aboutUs": new AboutUsStore()
   }}>
     <App />
   </Context.Provider>,

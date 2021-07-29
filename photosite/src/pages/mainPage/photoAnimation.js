@@ -30,7 +30,6 @@ function AnimateSlider() {
             div.classList.add('backgroundAddInfo');
             div.id = step;
             div.style.top = offset * mainContentBlock.clientHeight+'px';
-            console.log(mainContentBlock.clientHeight);
             mainContentBlock.appendChild(div);
 
             // CREATION OF IMAGE
@@ -40,7 +39,7 @@ function AnimateSlider() {
             mainContentBlock.appendChild(img);
 
 
-            if (step + 1 == slider.length) {
+            if (step + 1 === slider.length) {
                 step = 0;
             } else {
                 step++;
@@ -77,13 +76,13 @@ function AnimateSlider() {
             top();
             draw();
         }
-        let counter = 0;
+
 
         // АНИМАЦИЯ СЛАЙДЕРА
 
         let sliderAnimation = setInterval(function () {
             currentPosition = window.location.href;
-            if (currentPosition != 'http://localhost:3000/') {
+            if (currentPosition !== 'http://localhost:3000/') {
                 window.dispatchEvent(changeApiEvent);
                 return;
             }
@@ -94,15 +93,13 @@ function AnimateSlider() {
 
         mainContentBlock.addEventListener('mouseover', () => {
             document.querySelector('.mainPageContent-icons').style.right  ="60px";
-
             clearInterval(sliderAnimation);
-            console.log('mouseOver');
         });
         mainContentBlock.addEventListener('mouseout', () => {
                     document.querySelector('.mainPageContent-icons').style.right  = "-60px";
                     sliderAnimation = setInterval(function () {
                         currentPosition = window.location.href;
-                        if (currentPosition != 'http://localhost:3000/') {
+                        if (currentPosition !== 'http://localhost:3000/') {
                             window.dispatchEvent(changeApiEvent);
                             return;
                         }
@@ -118,7 +115,7 @@ function AnimateSlider() {
 
         window.addEventListener('click', function () {
             currentPosition = window.location.href;
-            if (currentPosition != 'http://localhost:3000/') {
+            if (currentPosition !== 'http://localhost:3000/') {
                 window.dispatchEvent(changeApiEvent);
                 return;
             }

@@ -4,14 +4,14 @@ window.addEventListener('DOMContentLoaded', function(){
     buttons.forEach((button, i)=>{
         button.addEventListener('click', function(e){
             if(window.innerWidth > 550){
-                if(e.target.classList.contains('registerButton') == false && e.target.classList.contains('loginButton') == false){
+                if(e.target.classList.contains('registerButton') === false && e.target.classList.contains('loginButton') === false){
                     console.log(e.target);
                     button.style.borderBottom = "solid black";
                     button.style.backgroundColor = "rgb(58, 89, 146)";
                     button.classList.add('active');
                     button.classList.remove('unactive');
                 buttons.forEach((button, i)=>{
-                    if(buttons[i] != e.target){
+                    if(buttons[i] !== e.target){
                         button.classList.remove('active');
                         button.classList.add('unactive');
                         button.style.borderBottom = "none";
@@ -20,13 +20,13 @@ window.addEventListener('DOMContentLoaded', function(){
                     });
                 }        
             }else{
-                if(e.target.classList.contains('registerButton') == false && e.target.classList.contains('loginButton') == false){
+                if(e.target.classList.contains('registerButton') === false && e.target.classList.contains('loginButton') === false){
                         button.style.borderLeft = "solid white";
                         button.style.backgroundColor = "inherit";
                         button.classList.add('active');
                         button.classList.remove('unactive');
                     buttons.forEach((button, i)=>{
-                        if(buttons[i] != e.target){
+                        if(buttons[i] !== e.target){
                         button.classList.remove('active');
                         button.classList.add('unactive');
                         button.style.borderLeft = "none";

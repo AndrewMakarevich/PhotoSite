@@ -2,12 +2,10 @@ window.addEventListener('DOMContentLoaded', function(){
     let registerButton = document.querySelector('.registerButton');
     let registerModalBackground = document.querySelector('.modalBackgroundReg');
     let closeRegModalButton = document.querySelector('.modalWindowReg .closeButtonReg');
-    let regModalWindow = document.querySelector('.modalWindowReg');
 
     let loginButton = document.querySelector('.loginButton');
     let loginModalBackground = document.querySelector('.modalBackgroundLog');
     let closeLogModalButton = document.querySelector('.modalWindowLog .closeButtonLog');
-    let logModalWindow = document.querySelector('.modalWindowLog');
 
     const openModal = (modal) =>{
         modal.classList.add('opened');
@@ -20,14 +18,15 @@ window.addEventListener('DOMContentLoaded', function(){
     registerButton.addEventListener('click', function(){
         openModal(registerModalBackground);
         registerModalBackground.addEventListener('click', function(e){
-            if(e.target == regModalWindow){
-                return;
-            }else{
+            if(e.target === registerModalBackground){
                 closeModal(registerModalBackground);
+                
+            }else{
+                return;
             }
         });
         document.addEventListener('keydown', function(e){
-            if(e.key == "Escape"){
+            if(e.key === "Escape"){
                 closeModal(registerModalBackground);
             }
         });
@@ -39,14 +38,15 @@ window.addEventListener('DOMContentLoaded', function(){
     loginButton.addEventListener('click', function(){
         openModal(loginModalBackground);
         loginModalBackground.addEventListener('click', function(e){
-            if(e.target == logModalWindow){
-                return;
-            }else{
+            if(e.target === loginModalBackground){
                 closeModal(loginModalBackground);
+                
+            }else{
+                return;
             }
         });
         document.addEventListener('keydown', function(e){
-            if(e.key == "Escape"){
+            if(e.key === "Escape"){
                 closeModal(loginModalBackground);
             }
         });

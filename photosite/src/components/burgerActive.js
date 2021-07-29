@@ -53,11 +53,11 @@ window.addEventListener('DOMContentLoaded', function(){
             }
         });
         document.addEventListener('click', function(e){
-            if(e.target != appBar && e.target != sections 
-                && e.target != burgerIcon && e.target != lines[0]
-                 && e.target != lines[1] && e.target != lines[2]
-                  && e.target.parentElement!=sections){
-                if(active==true){
+            if(e.target !== appBar && e.target !== sections 
+                && e.target !== burgerIcon && e.target !== lines[0]
+                 && e.target !== lines[1] && e.target !== lines[2]
+                  && e.target.parentElement!==sections){
+                if(active===true){
                     active = false;
                     lines[0].style.animation = "none";
                     lines[1].style.opacity = "1";

@@ -1,50 +1,15 @@
+::-webkit-scrollbar{
+    width: 0;
+}
+@font-face {
+    font-family: Sverdlovsk;
+    src: url(./fonts/Sverdlovsk.otf);
+}
+
+
+
 
 /* REGISTRATION MODAL */
-.modalBackgroundReg {
-    position: absolute;
-    top: -0.5px;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(0,0,0,0.6);
-    z-index: 3;
-}
-.modalWindowReg{
-    position: relative;
-    width: 500px;
-    height: 500px;
-    background-color: burlywood;
-    top: 90px;
-    
-}
-
-.modalWindowReg .closeButtonReg{
-    position: relative;
-    height: 30px;
-    width: 30px;
-    background-color:cadetblue;
-    cursor: pointer;
-}
-.modalWindowReg .closeButtonReg span{
-    position: absolute;
-    width: 100%;
-    height: 3px;
-    background-color:cornsilk;
-    top:50%;
-}
-.modalWindowReg .closeButtonReg .firstLine{
-    transform: rotate(45deg);
-}
-.modalWindowReg .closeButtonReg .secLine{
-    transform: rotate(-45deg);
-}
-.modalWindowReg .closeButtonReg:hover .firstLine{
-    animation: rotationFirst .6s ease-out; 
-}
-.modalWindowReg .closeButtonReg:hover .secLine{
-    animation: rotationSecond .6s ease-out; 
-}
 
 @keyframes rotationFirst {
     to{
@@ -57,54 +22,10 @@
     }
 }
 
-
 /* LOGIN MODAL */
-.modalBackgroundLog {
-    position: absolute;
-    top: -0.5px;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(0,0,0,0.6);
-    z-index: 3;
+.modalWindowLog-closeButtonBlock{
+    margin-top: -125px;
 }
-.modalWindowLog{
-    position: absolute;
-    width: 500px;
-    height: 500px;
-    background-color: burlywood;
-    top: 90px;
-}
-
-.modalWindowLog .closeButtonLog{
-    position: relative;
-    height: 30px;
-    width: 30px;
-    background-color:cadetblue;
-    cursor: pointer;
-}
-.modalWindowLog .closeButtonLog span{
-    position: absolute;
-    width: 100%;
-    height: 3px;
-    background-color:cornsilk;
-    top:50%;
-}
-.modalWindowLog .closeButtonLog .firstLine{
-    transform: rotate(45deg);
-}
-.modalWindowLog .closeButtonLog .secLine{
-    transform: rotate(-45deg);
-}
-.modalWindowLog .closeButtonLog:hover .firstLine{
-    animation: rotationFirst .6s ease-out; 
-}
-.modalWindowLog .closeButtonLog:hover .secLine{
-    animation: rotationSecond .6s ease-out; 
-}
-
-
 /* ROUTE PAGES */
 .routePages{
     position: relative;
@@ -112,11 +33,160 @@
     /* overflow-x: hidden; */
 }
 
+
+
+/* MODAL WINDOWS STYLES */
+.authorizationModalBackground{
+    position: fixed;
+    top: -0.5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(0,0,0,0.6);
+    z-index: 3;
+}
+.authorizationModal{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    height: 520px;
+    background-color: rgb(192, 190, 188);
+    top: 90px;  
+    border-radius: 10px;
+    overflow: hidden;
+    padding-top:0;
+}
+.authorizationModalCloseBtn{
+    background-color:rgb(83, 83, 105);
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    vertical-align:top;
+    padding-right: 10px;
+    padding-top: 10px;
+}
+.authorizationModalCloseBtn_button{
+    position: relative;
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+}
+.authorizationModalCloseBtn_button span{
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background-color:rgb(61, 58, 58);
+    top:50%;
+}
+.authorizationModalCloseBtn_button .firstLine{
+    transform: rotate(45deg);
+}
+.authorizationModalCloseBtn_button .secLine{
+    transform: rotate(-45deg);
+}
+.authorizationModalCloseBtn_button:hover .firstLine{
+    animation: rotationFirst .6s ease-out; 
+}
+.authorizationModalCloseBtn_button:hover .secLine{
+    animation: rotationSecond .6s ease-out; 
+}
+.authorizationModalHeader{
+    background-color:rgb(83, 83, 105);
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+    font-size: 70px;
+    letter-spacing: 5px;
+    font-family: Sverdlovsk;
+    box-shadow: 0px 11px 8px -8px rgba(34, 60, 80, 0.2);
+    margin-bottom: 25px;
+}
+.authorizationModalMainBlock{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 95%;
+}
+.authorizationModalMainBlock span{
+    position: absolute;
+    width: 80%;
+    height: 2px;
+    background-color: black;
+    pointer-events: none;
+    bottom: 0px;
+    transform: scale(0);
+    transition: .3s;
+}
+.authorizationModalMainBlock input{
+    width: 80%;
+    border: none;
+    background-color: transparent; 
+    outline:none;  
+    color:white;
+    font-family: Sverdlovsk;
+    letter-spacing: 5px;
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 15px;
+    background-color: rgb(124, 124, 124);
+    box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+    transition: background-color .3s;
+}
+.authorizationModalMainBlock input:focus{
+    background-color: rgb(238, 169, 157);
+}
+.authorizationModalMainBlock input:focus ~ span{
+    transform: scale(0.95);
+}
+.authorizationModalMainBlock label{
+    font-family: Sverdlovsk;
+    transition: .3s;
+    position: absolute;
+    pointer-events: none;
+    margin-top: -10px;
+    font-size: 30px;
+    letter-spacing: 5px;
+}
+.authorizationModalInput{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 95%;
+    margin: 20px 0 10px 0;
+}
+.authorizationModalSubmitButton{
+    transition: .3s;
+    border-radius: 50%;
+    height: 95px;
+    width: 95px;
+    padding: 0px;
+    background-color:rgb(83, 83, 105);
+    border: none;
+    color: white;
+    font-family: Sverdlovsk;
+    letter-spacing: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+    margin-bottom: 10px;
+}
+.authorizationModalSubmitButton:hover{
+    background-color: rgb(238, 169, 157);
+    color: black;
+}
+
+
 .hidden{
     display: none;
 }
 .opened{
     display: flex;
 }
-
-

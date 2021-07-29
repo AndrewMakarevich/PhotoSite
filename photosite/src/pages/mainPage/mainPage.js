@@ -5,6 +5,7 @@ import Forest from '../../pictures/mainPageNature.jpg';
 import Art from '../../pictures/mainPageArt.jpg';
 import AnimateSlider from './photoAnimation';
 import animateHeader from './headerAnimation';
+import PaginationContent from './paginationContent';
 
 
 
@@ -13,12 +14,16 @@ const textSample1 ='It is a long established fact that a reader will be distract
 const textSample2='There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which dont look even slightly believable. If you are going to use a passage of Lorem Ipsum';
 const MainPage = () =>{
 
-    
+        const [currentPagContent, setCurrentPagContent] = useState(1);
+
 
             useEffect(()=>{
                     AnimateSlider(); 
                     animateHeader();         
             },[]);
+
+
+
             return(
             <div className="mainPageBody">
                 <div className='mainPageBodyHeader'>
@@ -63,9 +68,17 @@ const MainPage = () =>{
                                         <div className="backgroundAddInfo-mainBlock-secondColumn">{textSample1}</div>
                                 </div>
                         </div>
-                        <img className="backgroundPhotoFirst" src={Girl}/>
-                        <img className="backgroundPhotoSecond" src={Forest}/>
-                        <img className="backgroundPhotoThird" src={Art}/>
+                        <img className="backgroundPhotoFirst" src={Girl} alt=""/>
+                        <img className="backgroundPhotoSecond" src={Forest} alt=""/>
+                        <img className="backgroundPhotoThird" src={Art} alt=""/>
+                </div>
+                <div className="mainPagePagination">
+                        <div className="mainPagePagination-menu">
+                                <button onClick = {()=>setCurrentPagContent(1)}>Gallery</button>
+                                <button onClick = {()=>setCurrentPagContent(2)}>About</button>
+                                <button onClick = {()=>setCurrentPagContent(3)}>Terms & conditions</button>
+                        </div>
+                        <PaginationContent className="paginationContent" currentPagContent={currentPagContent}/>
                 </div>
                 
             </div>
