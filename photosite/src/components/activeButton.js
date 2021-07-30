@@ -1,6 +1,5 @@
 window.addEventListener('DOMContentLoaded', function(){
     const buttons = document.querySelectorAll('.sectionsMenu button');
-    console.log(buttons);
     buttons.forEach((button, i)=>{
         button.addEventListener('click', function(e){
             if(window.innerWidth > 550){

@@ -30,7 +30,6 @@ function PaginationContent(props){
                     <div className="mainPagePagination-content-second-header"><span/>A BIT ABOUT FUNCTIONALITY</div>
                     {
                         aboutUs.header.map((header,i) => {
-                            console.log(i);
                             if(i%2){
                                 return(
                                     <div className="mainPagePagination-content-aboutUsBlock">
