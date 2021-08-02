@@ -7,6 +7,8 @@ const User = sequelize.define('user',{
     email: {type: DataTypes.STRING, unique: true, allowNull: false},
     role: {type: DataTypes.STRING, defaultValue:"USER"},
     password: {type: DataTypes.STRING, allowNull: false},
+    isActivated: {type: DataTypes.BOOLEAN, defaultValue: false},
+    activationLink: {type: DataTypes.STRING},
     firstname:{type: DataTypes.STRING},
     secondname:{type: DataTypes.STRING}
 
@@ -16,6 +18,10 @@ const Picture = sequelize.define('picture',{
     header:{type: DataTypes.STRING, allowNull: false},
     description: {type: DataTypes.STRING},
     img: {type: DataTypes.STRING, allowNull: false},
+});
+const Type = sequelize.define('type',{
+    id:{type:DataTypes.INTEGER, primaryKey:true, autoIncrement: true},
+    name:{type:DataTypes.STRING, allowNull:false}
 });
 const PictureLike = sequelize.define('picture_like',{
     id: {type: DataTypes.INTEGER, primaryKey:true, autoIncrement: true},
@@ -56,11 +62,14 @@ PictureLike.belongsTo(Picture);
 Picture.hasMany(PictureTag);
 PictureTag.belongsTo(Picture);
 
-Picture.hasMany(PictureInfo);
+Picture.hasMany(PictureInfo, {as: "add_info"});
 PictureInfo.belongsTo(Picture);
 
 Picture.hasMany(Comment);
 Comment.belongsTo(Picture);
+
+Type.hasMany(Picture);
+Picture.belongsTo(Type);
 
 Comment.hasMany(CommentLike);
 CommentLike.belongsTo(Comment);
@@ -68,6 +77,7 @@ CommentLike.belongsTo(Comment);
 module.exports = {
     User,
     Picture,
+    Type,
     PictureInfo,
     PictureLike,
     PictureTag,
