@@ -11,12 +11,12 @@ const commentLikeRouter = require('./commentLikeRouter');
 
 router.use('/user',userRouter);
 router.use('/picture',pictureRouter);
-router.use('/picture/likes',pictureLikeRouter);
+router.use('/pictureLikes',pictureLikeRouter);
 router.use('/picture/info',pictureInfoRouter);
 router.use('/picture/tags',pictureTagRouter);
 router.use('/type',typeRouter);
 router.use('/comments',commentRouter);
-router.use('/comments/likes',commentLikeRouter);
+router.use('/commentLikes',commentLikeRouter);
 
 
 module.exports = router;

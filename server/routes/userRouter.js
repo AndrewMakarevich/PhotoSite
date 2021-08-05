@@ -8,7 +8,6 @@ router.post('/registration',
     body('email').isEmail(),
     body('password').isLength({min:8}),
     userController.registration);
-
 router.post('/login',userController.login);
 router.get('/activate/:link',userController.activate);
 router.get('/auth', authMiddleware, userController.check);

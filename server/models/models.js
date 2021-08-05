@@ -56,22 +56,22 @@ Comment.belongsTo(User);
 User.hasMany(CommentLike);
 CommentLike.belongsTo(User);
 
-Picture.hasMany(PictureLike);
+Picture.hasMany(PictureLike, {as: "likes"});
 PictureLike.belongsTo(Picture);
 
-Picture.hasMany(PictureTag);
+Picture.hasMany(PictureTag, {as: "tags"});
 PictureTag.belongsTo(Picture);
 
 Picture.hasMany(PictureInfo, {as: "add_info"});
 PictureInfo.belongsTo(Picture);
 
-Picture.hasMany(Comment);
+Picture.hasMany(Comment, {as: "comments"});
 Comment.belongsTo(Picture);
 
 Type.hasMany(Picture);
 Picture.belongsTo(Type);
 
-Comment.hasMany(CommentLike);
+Comment.hasMany(CommentLike,{as: "comment_likes"});
 CommentLike.belongsTo(Comment);
 
 module.exports = {
