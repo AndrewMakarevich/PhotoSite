@@ -1,8 +1,12 @@
 import React,{useContext, useEffect} from 'react';
 import './mainPage.css';
 import './aboutUs.css';
+import './gallery.css';
 import scrollAnimation from './scrollAnimation';
 import { Context } from '../../index';
+// import {observer} from 'mobx-react-lite';
+
+import PictureList from '../../components/pictures/pictureList';
 
 
 
@@ -13,12 +17,21 @@ function PaginationContent(props){
     },[]);
 
     const {aboutUs} = useContext(Context);
+    const {picture} = useContext(Context);
 
     if(props.currentPagContent === 1){
         return(
             <>
                 <div className="mainPagePagination-content first">
-
+                    <select>
+                       {picture.type.map((type)=>{
+                           return(
+                               <option onClick ={()=> picture.setSelectedType(type)} key={type.id}>{type.name}</option>
+                           )    
+                        })} 
+                    </select>
+                    <PictureList/>
+                    
                 </div>
             </>
         )

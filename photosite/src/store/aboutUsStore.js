@@ -62,6 +62,7 @@ export default class AboutUsStore{
                 fullName:"Andrew Makarevich"
             }
         ];
+        makeAutoObservable(this);
     }
 
     setHeader(text){

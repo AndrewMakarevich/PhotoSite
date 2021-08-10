@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', function(){
+function modalWindowsScript(){
     let registerButton = document.querySelector('.registerButton');
     let registerModalBackground = document.querySelector('.modalBackgroundReg');
     let closeRegModalButton = document.querySelector('.modalWindowReg .closeButtonReg');
@@ -55,5 +55,6 @@ window.addEventListener('DOMContentLoaded', function(){
         closeModal(loginModalBackground);
     });
 
-});
+};
+export default modalWindowsScript;
 

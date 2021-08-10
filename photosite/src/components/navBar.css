@@ -10,6 +10,13 @@
     height: 55px;
     box-shadow: 0px 5px 8px 0px rgba(34, 60, 80, 0.5);
 }
+
+.AppBar .sectionsMenu{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .AppBar .sectionsMenu button{
     background: transparent;
     border: none;

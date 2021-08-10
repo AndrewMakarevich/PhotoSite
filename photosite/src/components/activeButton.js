@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', function(){
+function activeButtons(){
     const buttons = document.querySelectorAll('.sectionsMenu button');
     buttons.forEach((button, i)=>{
         button.addEventListener('click', function(e){
@@ -58,4 +58,6 @@ window.addEventListener('DOMContentLoaded', function(){
             });
         }
     });
-});
+};
+
+export default activeButtons;

@@ -9,8 +9,9 @@ const app = express();
 const router = require('./routes/index');
 const errorHandler = require('./middleware/ErrorHandlingMiddleware');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 
-
+app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.resolve(__dirname,'static')));

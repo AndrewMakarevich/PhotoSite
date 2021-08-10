@@ -1,20 +1,28 @@
 import React, {createContext} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { BrowserRouter} from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import UserStore from './store/userStore';
 import AboutUsStore from './store/aboutUsStore';
+import PictureStore from './store/pictureStore';
 
 export const Context = createContext(null);
+
+console.log(process.env.REACT_APP_API_URL);
 
 ReactDOM.render(
   <Context.Provider value={{
     "user": new UserStore(),
-    "aboutUs": new AboutUsStore()
+    "aboutUs": new AboutUsStore(),
+    "picture": new PictureStore()
   }}>
-    <App />
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>
+    
   </Context.Provider>,
   document.getElementById('root')
 );

@@ -76,19 +76,42 @@ class userService{
             if(!user){
                 throw ApiError.badRequest('Пользователь не существует');
             }
-            const passEquals = await bcrypt.compare(password, user.password);
-            if(!passEquals){
-                throw ApiError.badRequest('Неверный пароль');
-            }
             if(user.isActivated == false){
                 throw ApiError.badRequest('Аккаунт не активирован');
             }
+            const passEquals = await bcrypt.compare(password, user.password);
+            if(!passEquals){
+                throw ApiError.badRequest('Неверный пароль');
+            } 
             const token = generateJwt(user.id, user.email, user.role);
-            return token;
+            return {token};
     }
     async check(id,email,role){
         const token = generateJwt(id, email, role);
         return token;
+    }
+    async getOne(token){
+        try{
+            if(!token){
+                throw ApiError.UnauthorizedError("Ошибка авторизации");
+            }
+            const tokenInfo =  jwt.decode(token, process.env.SECRET_KEY);
+            const user = await User.findOne({
+                where:{
+                    id: tokenInfo.id
+                }
+            });
+            return {user:{
+                id: user.id,
+                nickname: user.nickname,
+                email: user.email,
+                role: user.role,
+                firstname: user.firstname,
+                secondname: user.secondname
+            }};
+        }catch(e){
+            throw ApiError.badRequest("Ошибка получения информации, попробуйте снова", e);
+        }
     }
 }
 

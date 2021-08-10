@@ -1,17 +1,23 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Context } from '../index';
 import { useHistory } from 'react-router';
 import { ADMIN_ROUTE, PERSONAL_CABINET_ROUTE,MAIN_PAGE_ROUTE } from '../utils/consts';
 import './navBar.css';
-import './activeButton.js';
-import './burgerActive.js';
+import activeButtons from './activeButton';
+import adaptiveNavMenu from './burgerActive';
+import modalWindowsScript from '../modalWindowsScript';
+import {observer} from 'mobx-react-lite';
 
 
-const NavBar = ()=>{
+
+const NavBar = observer(()=>{
     const {user} = useContext(Context);
     const history = useHistory();
-
-        if(user.isAuth){
+    useEffect(()=>{
+        modalWindowsScript();
+        adaptiveNavMenu();
+        activeButtons();
+    },[user.isAuth, user._user]);
             return(
                 <div className="AppBar">
                     <div className="burgerMenuIcon">
@@ -19,26 +25,50 @@ const NavBar = ()=>{
                         <span className="secLine"></span>
                         <span className="thirdLine"></span>
                     </div>
-                    <div className="sectionsMenu">
-                        <button  onClick={()=> history.push(ADMIN_ROUTE)}>Admin cabinet</button>
-                        <button onClick={()=> history.push(PERSONAL_CABINET_ROUTE)}>Personal cabinet</button>
-                        <button onClick={()=> history.push(MAIN_PAGE_ROUTE)}>Main page</button>
-                        <button className="registerButton">Register</button>
-                        <button className="loginButton">Login</button>
-                    </div>
+                        {
+                            (user.isAuth?
+                                (user._user.role==="ADMIN"?
+                                    <div className="sectionsMenu">  
+                                        <div>
+                                            <button  onClick={()=> history.push(ADMIN_ROUTE)}>Admin cabinet</button>
+                                            <button onClick={()=> history.push(PERSONAL_CABINET_ROUTE)}>Personal cabinet</button>
+                                            <button onClick={()=> history.push(MAIN_PAGE_ROUTE)}>Main page</button>
+                                        </div>                    
+                                        <div>                                       
+                                            <button className="registerButton">Register</button>
+                                            <button className="loginButton">Login</button>  
+                                        </div>
+                                    
+                                    </div> 
+                                    :
+                                    <div className="sectionsMenu">  
+                                    <div>
+                                        <button onClick={()=> history.push(PERSONAL_CABINET_ROUTE)}>Personal cabinet</button>
+                                        <button onClick={()=> history.push(MAIN_PAGE_ROUTE)}>Main page</button>
+                                    </div>                    
+                                    <div>                                       
+                                        <button className="registerButton">Register</button>
+                                        <button className="loginButton">Login</button>  
+                                    </div>
+                                
+                                </div> 
+                                )
+                                 
+                                :
+                                <div className="sectionsMenu">
+                                    <div>
+                                       <button onClick={()=> history.push(MAIN_PAGE_ROUTE)}>Main page</button> 
+                                    </div>
+                                    <div>
+                                        <button className="registerButton">Register</button>
+                                        <button className="loginButton">Login</button> 
+                                    </div>
+                                    
+                                    
+                                </div>
+                            )
+                        }    
                 </div>
             )
-        }else{
-            return(
-                <div className="AppBar">
-                    <div className="sectionsMenu">
-                        <button onClick={()=> history.push(MAIN_PAGE_ROUTE)}>Main page</button>
-                        <button className="registerButton">Register</button>
-                        <button className="loginButton">Login</button>
-                    </div>
-                </div>
-            )
-        }
-
-};
+});
 export default NavBar;

@@ -1,14 +1,18 @@
 import React, {useContext} from 'react';
 import {Switch, Route, Redirect} from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 import {Context} from '../index';
-import { authRoutes, publicRoutes } from '../routes';
+import { adminRoutes, userRoutes, publicRoutes } from '../routes';
 import { MAIN_PAGE_ROUTE } from '../utils/consts';
 
-const AppRouter = () =>{
+const AppRouter = observer(() =>{
     const {user} = useContext(Context);
     return(
         <Switch>
-            {user.isAuth && authRoutes.map(({path, component})=>
+            {user.isAuth && user._user.role == "ADMIN" && adminRoutes.map(({path, component})=>
+                <Route key={path} path={path} component={component}/>
+            )}
+            {user.isAuth && user._user.role == "USER" && userRoutes.map(({path, component})=>
                 <Route key={path} path={path} component={component}/>
             )}
             {publicRoutes.map(({path, component})=>
@@ -19,6 +23,6 @@ const AppRouter = () =>{
         </Switch>
 
     )
-};
+});
 
 export default AppRouter;

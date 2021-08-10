@@ -3,11 +3,17 @@ import personalCabinet from './pages/personalCabinet';
 import adminCabinet from './pages/adminCabinet';
 import { ADMIN_ROUTE, PERSONAL_CABINET_ROUTE,MAIN_PAGE_ROUTE } from './utils/consts';
 
-export const authRoutes =[
+export const adminRoutes =[
     {
         path: ADMIN_ROUTE,
         component: adminCabinet
     },
+    {
+        path: PERSONAL_CABINET_ROUTE,
+        component: personalCabinet
+    }
+];
+export const userRoutes =[
     {
         path: PERSONAL_CABINET_ROUTE,
         component: personalCabinet

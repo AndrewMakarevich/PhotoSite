@@ -1,4 +1,4 @@
-window.addEventListener('DOMContentLoaded', function(){
+function adaptiveNavMenu(){
     let active = false;
     const burgerIcon  = document.querySelector('.burgerMenuIcon');
 
@@ -71,4 +71,5 @@ window.addEventListener('DOMContentLoaded', function(){
             }
         });
     }
-});
+};
+export default adaptiveNavMenu;
