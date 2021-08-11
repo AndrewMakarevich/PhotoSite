@@ -55,6 +55,7 @@ export default class PictureStore{
                 img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Chesmabattle.jpg/1200px-Chesmabattle.jpg"
             },
         ];
+        
         makeAutoObservable(this);
     }
     setType(type){

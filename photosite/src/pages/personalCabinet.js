@@ -2,6 +2,8 @@ import React,{useContext,useEffect,useState} from 'react';
 import {observer} from 'mobx-react-lite';
 import { Context } from '../index';
 import { getUserInfo } from '../http/userAPI';
+import PersonalCabModalWindow from '../components/personalCabinet/PersonalCabModalWindow';
+import toggleModalScript from '../components/personalCabinet/modalWindowScript';
 
 
 const PersonalCabinet = observer(() =>{
@@ -17,6 +19,10 @@ const PersonalCabinet = observer(() =>{
             console.log(data.user);
             setUserInfo(data.user)});    
     },[user._user]);
+
+    useEffect(()=>{
+        toggleModalScript();
+    },[]);
     
     return(
         <>
@@ -30,6 +36,9 @@ const PersonalCabinet = observer(() =>{
                 </ul>
                 
             </div>
+            <button className="openPersonalCabModalBtn">open modal</button>
+            <PersonalCabModalWindow/>
+
             <button onClick={()=>{logOut()}}>LOG OUT</button>
         </>        
     )

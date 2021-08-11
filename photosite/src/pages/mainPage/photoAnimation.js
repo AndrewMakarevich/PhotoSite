@@ -22,8 +22,8 @@ function AnimateSlider() {
 
 
         let mainContentBlock = document.querySelector('.mainPageContent');
-        function draw() {
-            
+
+        function draw() {           
             // CREATION OF INFO BLOCK
             let div = document.createElement('div');
             div.innerHTML = infoSlider[step];
@@ -76,8 +76,6 @@ function AnimateSlider() {
             top();
             draw();
         }
-
-
         // АНИМАЦИЯ СЛАЙДЕРА
 
         let sliderAnimation = setInterval(function () {

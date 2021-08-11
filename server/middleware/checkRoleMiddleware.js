@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports = function(role){
     return function(req,res,next){
-        if(req.method = "OPTIONS"){
+        if(req.method === "OPTIONS"){
             next();
         }
         try{
@@ -16,6 +16,7 @@ module.exports = function(role){
                 throw ApiError.forbidden('Нет доступа');
             }
             req.user = decoded;
+            next();
         }catch(e){
             throw ApiError.badRequest(e.message);
         }

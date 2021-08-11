@@ -17,16 +17,22 @@ import { registration,login,check } from './http/userAPI';
 const App = observer(() => {
   const {user} = useContext(Context);
   const history = useHistory();
+
+  // REGISTRATION AND AUTHORIZATION INFO
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [repPassword, setRepPassword] = useState("");
 
   const signIn = async()=>{
     try{
-      const response = await registration(nickname, email, password);
-      alert(response.message);
-      
-      return console.log(response.token);
+      if(password === repPassword){
+        const response = await registration(nickname, email, password);
+        alert(response.message);
+        return console.log(response.token);
+      }else{
+        alert("Пароли не совпадают");
+      }  
     }catch(e){
       alert(e.response.data.message);
     }  
@@ -103,7 +109,7 @@ const App = observer(() => {
                 <div className="modalWindowReg-mainBlock-repPasswordBlock authorizationModalInput">
                   
                   
-                  <input className="modalWindowReg-mainBlock-repPassword"></input>
+                  <input onChange={(e)=>{setRepPassword(e.target.value)}} className="modalWindowReg-mainBlock-repPassword"></input>
                   <label>repeat password</label>
                   <span/>
                 </div> 

@@ -1,5 +1,6 @@
 const uuid = require('uuid');
 const path = require('path');
+const jwt = require('jsonwebtoken');
 const ApiError = require('../error/ApiError');
 const fs = require('fs');
 
@@ -18,10 +19,17 @@ async function deleteAddPicturesTables(modelName, id){
 class PictureController {
     async create(req,res,next){
         try{
-            let {header, description, userId, typeId, info, tags} = req.body;
+            
+            let {header, description, typeId, info, tags} = req.body;
+            console.log( "INFO"+ header, description, typeId, info, tags);
+            const token = req.headers.authorization.split(' ')[1];
+            if(!token){
+                throw ApiError.badRequest('Не авторизован');
+            }
+            const tokenInfo = jwt.decode(token, process.env.SECRET_KEY);
             const {img} = req.files;
             let fileName = uuid.v4()+".jpg";
-            const picture = await Picture.create({header,description,userId,typeId,img: fileName});
+            const picture = await Picture.create({header,description,userId: tokenInfo.id,typeId,img: fileName});
             img.mv(path.resolve(__dirname, '..', 'static', fileName));
             if(info){
                 info = JSON.parse(info);
