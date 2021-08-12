@@ -1,63 +1,43 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Context } from "../../index";
+import { observer } from 'mobx-react-lite';
 import PictureItem from './pictureItem';
 import PictureModalWindow from './pictureModalWindow';
 import showPictureModal from './pictureModalScript';
 import './pictureItem.css';
 
+import { getPictures } from '../../http/pictureAPI';
 
 
-const PictureList = () =>{
-    const {picture} = useContext(Context);
-    useEffect(()=>{
+
+const PictureList = observer((props) => {
+    const [pictureId, setPictureId] = useState('');
+    const { picture } = useContext(Context);
+    useEffect(() => {
         showPictureModal();
-        
-    },[]);
-    const [currentPicture, setCurrentPicture] = useState({
-                id:"",
-                header:"",
-                description:"",
-                img:""
-    });
-    const [pictureInfo, setPictureInfo] = useState([
-        {
-            id: "1",
-            title: "Author",
-            description: "Leonardo da Vinci"
-        },
-        {
-            id: "2",
-            title: "Year of creation",
-            description: "15--"
-        },
-        {
-            id: "3",
-            title: "More about",
-            description: "Some link"
-        }
-    ]);
+        getPictures().then(data => picture.setPictures(data.rows));
+    }, []);
 
-    return(
+    return (
         <>
-            <PictureModalWindow picture={currentPicture} pictureInfo={pictureInfo}/>
+            <PictureModalWindow pictureId={pictureId} />
             <div className="pictureList">
-                {picture.pictures.map(picture=>{
-                    return(
+                {picture.pictures.map(picture => {
+                    return (
                         <div key={picture.id} className="pictureList-pictureBlock" onClick={
-                            async ()=>{
-                                await setCurrentPicture({id: picture.id, header: picture.header, description: picture.description, img: picture.img});
-                                console.log({currentPicture});
+                            async () => {
+                                await setPictureId(picture.id);
                             }
                         }>
-                            <PictureItem key={picture.id} picture={picture}/>  
-                        </div>                        
+                            <PictureItem key={picture.id} picture={picture} />
+                        </div>
                     )
                 })}
-                
+
             </div>
-            
+
         </>
-        
+
     )
-};
+});
 export default PictureList;

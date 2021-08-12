@@ -118,4 +118,10 @@
     text-align: center;
     background-color:rgb(94, 97, 97,0.3);
 }
+.info-section_tags{
+    font-size: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    justify-content: center;
+}
 
