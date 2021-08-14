@@ -1,7 +1,7 @@
-import React, {createContext} from 'react';
+import React, { createContext } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import { BrowserRouter} from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
@@ -11,7 +11,6 @@ import PictureStore from './store/pictureStore';
 
 export const Context = createContext(null);
 
-console.log(process.env.REACT_APP_API_URL);
 
 ReactDOM.render(
   <Context.Provider value={{
@@ -20,9 +19,9 @@ ReactDOM.render(
     "picture": new PictureStore()
   }}>
     <BrowserRouter>
-        <App />
+      <App />
     </BrowserRouter>
-    
+
   </Context.Provider>,
   document.getElementById('root')
 );

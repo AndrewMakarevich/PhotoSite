@@ -23,8 +23,7 @@ const PictureModalWindow = (props) => {
                     <section className="info-section">
                         <article className="info-section_header">
                             <button className="modal-mainLayer_block-closeButton">close</button>
-                            HEADER: {picture.header}
-                            ID:{picture.id}
+                            {picture.header}
                         </article>
                         <section className="info-section_description">
                             <h1>DESCRIPTION</h1>

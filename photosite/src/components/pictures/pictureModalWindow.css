@@ -35,6 +35,12 @@
     position: relative;
     overflow: hidden;
 }
+.image-section_photochange{
+    position: absolute;
+    z-index: 4;
+    top:0;
+    left:0;
+}
 .image-section_image{
     object-fit: contain;
     position: relative;
@@ -124,4 +130,5 @@
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     justify-content: center;
 }
+
 

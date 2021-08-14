@@ -14,7 +14,7 @@ const PersonalCabModalWindow = observer(() => {
     const [PictureTags, setPictureTags] = useState([]);
     const [header, setHeader] = useState('');
     const [description, setDescription] = useState('');
-    const [type, setType] = useState(15);
+    const [type, setType] = useState();
     const [img, setImg] = useState(null);
 
 

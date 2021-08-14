@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../index';
 import { getUserInfo } from '../http/userAPI';
+import { getTypes } from '../http/typeAPI';
 import PersonalPictureList from '../components/personalCabinet/gallery/personalPictureList';
 import PersonalCabModalWindow from '../components/personalCabinet/PersonalCabModalWindow';
 import toggleModalScript from '../components/personalCabinet/modalWindowScript';
@@ -9,6 +10,7 @@ import toggleModalScript from '../components/personalCabinet/modalWindowScript';
 
 const PersonalCabinet = observer(() => {
     const { user } = useContext(Context);
+    const { picture } = useContext(Context);
     const [userInfo, setUserInfo] = useState('');
     const logOut = async () => {
         user.setUser({});
@@ -19,9 +21,11 @@ const PersonalCabinet = observer(() => {
         getUserInfo().then(data => {
             setUserInfo(data.user);
         });
-    }, []);
+
+    }, [user]);
 
     useEffect(() => {
+        getTypes().then(data => picture.setType(data));
         toggleModalScript();
     }, []);
 

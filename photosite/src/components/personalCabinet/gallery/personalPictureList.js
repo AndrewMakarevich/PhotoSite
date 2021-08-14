@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { Context } from "../../../index";
 import { observer } from 'mobx-react-lite';
 import PictureItem from '../../pictures/pictureItem';
-import PictureModalWindow from '../../pictures/pictureModalWindow';
+import PersonalPictureModalWindow from './personalPictureModalWindow';
 import showPictureModal from '../../pictures/pictureModalScript';
 import '../../pictures/pictureItem.css';
 
@@ -18,13 +18,13 @@ const PersonalPictureList = observer((props) => {
     const { picture } = useContext(Context);
     useEffect(() => {
         showPictureModal();
-        getPersonalPictures(userId, typeId).then(data => picture.setPictures(data.rows)).finally(() => setListLoading(false));
+        // getPersonalPictures(userId, typeId).then(data => picture.setPictures(data.rows)).finally(() => setListLoading(false));
     }, []);
     useEffect(() => {
         showPictureModal();
         getPersonalPictures(userId, typeId).then(data => picture.setPictures(data.rows)).finally(() => setListLoading(false));
-    }, [userId]);
-    if (listLoading) {
+    }, [userId, typeId]);
+    if (!userId) {
         return (
             <div className="pictureList">Галерея загружается...</div>
         )
@@ -32,7 +32,7 @@ const PersonalPictureList = observer((props) => {
 
     return (
         <>
-            <PictureModalWindow pictureId={pictureId} />
+            <PersonalPictureModalWindow pictureId={pictureId} />
             <div className="pictureList">
                 {picture.pictures.map(picture => {
                     return (

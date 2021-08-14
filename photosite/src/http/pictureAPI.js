@@ -12,8 +12,12 @@ export const getPersonalPictures = async (userId, typeId) => {
 export const getOnePicture = async (id) => {
     const { data } = await $host.get(`api/picture/${id}`, { id });
     return data;
-}
+};
 export const createPicture = async (picture) => {
     const { data } = await $authHost.post('api/picture', picture);
+    return data.message;
+};
+export const updatePicture = async (picture, id) => {
+    const { data } = await $authHost.put(`api/picture/${id}`, picture);
     return data.message;
 };
