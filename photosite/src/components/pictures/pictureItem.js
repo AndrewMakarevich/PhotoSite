@@ -1,6 +1,7 @@
 import React from 'react';
 import './pictureItem.css';
 
+
 const PictureItem = ({ picture }) => {
     return (
         <div className="pictureItem-section">

@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-const AdminCabinet = () =>{
-    return(
-        <div>ADMIN</div>
+import AddTypeModalWindow from '../components/adminCabinet/addTypeModalWindow';
+
+import toggleModalWindow from '../components/adminCabinet/modalWindowScript';
+
+const AdminCabinet = () => {
+    useEffect(() => {
+        toggleModalWindow();
+    }, []);
+    return (
+        <div>ADMIN
+            <button className="openAddTypeModalButton">Add type</button>
+            <AddTypeModalWindow />
+        </div>
+
     )
 }
 

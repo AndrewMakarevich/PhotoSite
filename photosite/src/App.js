@@ -115,7 +115,13 @@ const App = observer(() => {
             </div>
           </div>
           <div className="modalWindowReg-bottomBlock">
-            <button className="authorizationModalSubmitButton" onClick={() => { signIn() }}>SIGN UP</button>
+            <button
+              className="authorizationModalSubmitButton"
+              onClick={() => {
+                signIn();
+              }}>
+              SIGN UP
+            </button>
           </div>
 
         </div>

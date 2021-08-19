@@ -40,8 +40,8 @@
     z-index: 0;
 }
 .pictureItem-section_image{
-    height: 100%;
-    /* object-fit: cover; */
+    /* height: 100%; */
+    object-fit: cover;
     transition: .3s;
     z-index: 1;
 }

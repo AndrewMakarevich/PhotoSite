@@ -58,7 +58,6 @@ class PictureController {
     async getAll(req, res) {
         try {
             let { userId, typeId, limit, page } = req.query;
-            console.log(`USER_ID: ${userId}`);
             page = page || 1;
             limit = limit || 9;
             let offset = page * limit - limit;
@@ -154,20 +153,42 @@ class PictureController {
                 )
                 if (info) {
                     info = JSON.parse(info);
+                    console.log(info);
                     info.forEach(i => {
-                        PictureInfo.update(
-                            { title: i.title, description: i.description },
-                            { where: { id: i.id } }
-                        )
+                        if (i.id) {
+                            PictureInfo.update(
+                                { title: i.title, description: i.description },
+                                { where: { id: i.id } }
+                            )
+                        } else if (i.number) {
+                            PictureInfo.create(
+                                {
+                                    title: i.title,
+                                    description: i.description,
+                                    pictureId: picture.id
+                                }
+                            )
+                        }
+
                     })
                 }
                 if (tags) {
                     tags = JSON.parse(tags);
                     tags.forEach(t => {
-                        PictureTag.update(
-                            { text: t.text },
-                            { where: { id: t.id } }
-                        )
+                        if (t.id) {
+                            PictureTag.update(
+                                { text: t.text },
+                                { where: { id: t.id } }
+                            )
+                        } else if (t.number) {
+                            PictureTag.create(
+                                {
+                                    text: t.text,
+                                    pictureId: picture.id
+                                }
+                            )
+                        }
+
                     });
                 }
                 await fs.unlink(path.resolve(__dirname, '..', 'static', picturePreviousFile), () => {

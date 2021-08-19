@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import './pictureModalWindow.css';
 import { getOnePicture } from '../../http/pictureAPI';
+import LikeItem from '../personalCabinet/likeBlock/likeItem';
+import InfoAndCommentsContent from './pictureModalWindowPagContent';
 
-const PictureModalWindow = (props) => {
-    const pictureId = props.pictureId;
+const PictureModalWindow = ({ pictureId }) => {
+    const [currentContent, setCurrentContent] = useState('info');
     const [picture, setPicture] = useState({});
     useEffect(() => {
         getOnePicture(pictureId).then(data => {
             setPicture(data);
-            console.log(data);
         }
         );
     }, [pictureId]);
@@ -19,45 +20,16 @@ const PictureModalWindow = (props) => {
                     <section className="image-section">
                         <div className="image-section_background" style={{ "backgroundImage": `url(${process.env.REACT_APP_API_URL + picture.img})` }} alt='' />
                         <img className="image-section_image" src={process.env.REACT_APP_API_URL + picture.img} alt='' />
+                        <LikeItem picture={picture} />
                     </section>
-                    <section className="info-section">
-                        <article className="info-section_header">
-                            <button className="modal-mainLayer_block-closeButton">close</button>
-                            {picture.header}
-                        </article>
-                        <section className="info-section_description">
-                            <h1>DESCRIPTION</h1>
-                            <div>{picture.description}</div>
+                    <section className="modal-mainLayer_block-paginationSection">
+                        <section className="modal-mainLayer_block-paginationMenu">
+                            <button className="modal-mainLayer_block-closeButton" onClick={() => setCurrentContent('info')}>close</button>
+                            <button onClick={() => setCurrentContent('info')}>Info</button>
+                            <button onClick={() => setCurrentContent('comments')}>Comments</button>
                         </section>
-                        {
-                            (picture.add_info ?
-                                picture.add_info.map(pictureI => {
-                                    return (
-                                        <section key={pictureI.id} className="info-section_addInfo">
-                                            <h2>{pictureI.title}</h2>
-                                            <div>{pictureI.description}</div>
-                                        </section>
-                                    )
-                                })
-                                :
-                                null
-                            )
-                        }
-                        <section className="info-section_tags">
-                            {
-                                (picture.tags ?
-                                    picture.tags.map(tag => {
-                                        return (
-                                            <div key={tag.id}>{tag.text}</div>
-                                        )
-                                    })
-                                    :
-                                    null
-                                )
-                            }
-                        </section>
+                        <InfoAndCommentsContent picture={picture} currentContent={currentContent} />
                     </section>
-
 
                 </div>
             </div>

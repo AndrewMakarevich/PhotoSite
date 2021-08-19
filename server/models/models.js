@@ -1,46 +1,46 @@
 const sequelize = require('../db');
-const{DataTypes} = require('sequelize');
+const { DataTypes } = require('sequelize');
 
-const User = sequelize.define('user',{
-    id: {type: DataTypes.INTEGER, primaryKey:true, autoIncrement: true},
-    nickname:{type: DataTypes.STRING, unique:true, allowNull: false},
-    email: {type: DataTypes.STRING, unique: true, allowNull: false},
-    role: {type: DataTypes.STRING, defaultValue:"USER"},
-    password: {type: DataTypes.STRING, allowNull: false},
-    isActivated: {type: DataTypes.BOOLEAN, defaultValue: false},
-    activationLink: {type: DataTypes.STRING},
-    firstname:{type: DataTypes.STRING},
-    secondname:{type: DataTypes.STRING}
+const User = sequelize.define('user', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    nickname: { type: DataTypes.STRING, unique: true, allowNull: false },
+    email: { type: DataTypes.STRING, unique: true, allowNull: false },
+    role: { type: DataTypes.STRING, defaultValue: "USER" },
+    password: { type: DataTypes.STRING, allowNull: false },
+    isActivated: { type: DataTypes.BOOLEAN, defaultValue: false },
+    activationLink: { type: DataTypes.STRING },
+    firstname: { type: DataTypes.STRING },
+    secondname: { type: DataTypes.STRING }
 
 });
-const Picture = sequelize.define('picture',{
-    id: {type: DataTypes.INTEGER, primaryKey:true, autoIncrement: true},
-    header:{type: DataTypes.STRING, allowNull: false},
-    description: {type: DataTypes.STRING},
-    img: {type: DataTypes.STRING, allowNull: false},
+const Picture = sequelize.define('picture', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    header: { type: DataTypes.STRING, allowNull: false },
+    description: { type: DataTypes.STRING },
+    img: { type: DataTypes.STRING, allowNull: false },
 });
-const Type = sequelize.define('type',{
-    id:{type:DataTypes.INTEGER, primaryKey:true, autoIncrement: true},
-    name:{type:DataTypes.STRING, allowNull:false}
+const Type = sequelize.define('type', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    name: { type: DataTypes.STRING, allowNull: false }
 });
-const PictureLike = sequelize.define('picture_like',{
-    id: {type: DataTypes.INTEGER, primaryKey:true, autoIncrement: true},
+const PictureLike = sequelize.define('picture_like', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 });
-const PictureTag = sequelize.define('picture_tag',{
-    id: {type: DataTypes.INTEGER, primaryKey:true, autoIncrement: true},
-    text:{type:DataTypes.STRING, allowNull: false}
+const PictureTag = sequelize.define('picture_tag', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    text: { type: DataTypes.STRING, allowNull: false }
 });
-const PictureInfo = sequelize.define('picture_info',{
-    id: {type: DataTypes.INTEGER, primaryKey:true, autoIncrement: true},
-    title:{type:DataTypes.STRING, allowNull: false},
-    description:{type:DataTypes.STRING, allowNull: false}
+const PictureInfo = sequelize.define('picture_info', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    title: { type: DataTypes.STRING, allowNull: false },
+    description: { type: DataTypes.STRING, allowNull: false }
 });
-const Comment = sequelize.define('comment',{
-    id: {type: DataTypes.INTEGER, primaryKey:true, autoIncrement: true},
-    text:{type:DataTypes.STRING, allowNull: false},
+const Comment = sequelize.define('comment', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    text: { type: DataTypes.STRING, allowNull: false },
 });
-const CommentLike = sequelize.define('comment_like',{
-    id: {type: DataTypes.INTEGER, primaryKey:true, autoIncrement: true},
+const CommentLike = sequelize.define('comment_like', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 });
 
 
@@ -56,22 +56,22 @@ Comment.belongsTo(User);
 User.hasMany(CommentLike);
 CommentLike.belongsTo(User);
 
-Picture.hasMany(PictureLike, {as: "likes"});
+Picture.hasMany(PictureLike, { as: "likes" });
 PictureLike.belongsTo(Picture);
 
-Picture.hasMany(PictureTag, {as: "tags"});
+Picture.hasMany(PictureTag, { as: "tags" });
 PictureTag.belongsTo(Picture);
 
-Picture.hasMany(PictureInfo, {as: "add_info"});
+Picture.hasMany(PictureInfo, { as: "add_info" });
 PictureInfo.belongsTo(Picture);
 
-Picture.hasMany(Comment, {as: "comments"});
+Picture.hasMany(Comment, { as: "comments" });
 Comment.belongsTo(Picture);
 
 Type.hasMany(Picture);
 Picture.belongsTo(Type);
 
-Comment.hasMany(CommentLike,{as: "comment_likes"});
+Comment.hasMany(CommentLike, { as: "comment_likes" });
 CommentLike.belongsTo(Comment);
 
 module.exports = {

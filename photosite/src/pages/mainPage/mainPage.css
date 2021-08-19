@@ -3,7 +3,9 @@
     font-family: Sverdlovsk;
     src: url('../../fonts/Sverdlovsk.otf');
 }
-
+.mainPageBody{
+    overflow-x: hidden;
+}
 /* HEADER */
 .mainPageBodyHeader{
     display: flex;

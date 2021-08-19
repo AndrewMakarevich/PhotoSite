@@ -1,0 +1,43 @@
+.likeItem-mainBlock{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index:3;
+    padding: 5px;
+    min-width: 180px;
+    height: 35px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    background-color: rgb(233, 218, 179,0.4);
+    border-top-left-radius: 15px;
+
+    font-family: Sverdlovsk;
+    font-size: 25px;
+    letter-spacing: 5px;
+}
+.likeItem-mainBlock div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.likeItem-mainBlock_likeBlock_likeButton{
+    width: 35px;
+    height: 35px;
+    background-image: url('../../../icons/like.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: .2s;
+    outline: none;
+}
+.likeItem-mainBlock_likeBlock_likeButton:active{
+    transform: scale(0.7);
+}
+.stillDontLikedButton{
+    background-color: white;
+}
+.alreadyLikedButton{
+    background-color: rgb(221, 142, 204);
+}

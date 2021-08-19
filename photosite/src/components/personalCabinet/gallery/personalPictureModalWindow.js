@@ -6,6 +6,8 @@ import { deleteTag } from '../../../http/pictureTagAPI';
 import { Context } from '../../../index';
 import getOptionsInfo from '../getOptionsInfo';
 
+import './personalPictureModalWindow.css';
+
 const PersonalPictureModalWindow = (props) => {
     const { picture } = useContext(Context);
 
@@ -16,7 +18,7 @@ const PersonalPictureModalWindow = (props) => {
     const [header, setHeader] = useState('');
     const [description, setDescription] = useState('');
     const [type, setType] = useState('');
-    const [img, setImg] = useState(null);
+    const [img, setImg] = useState('');
 
     const [PictureInfo, setPictureInfo] = useState([]);
     const [deletedPictureInfo, setDeletedPictureInfo] = useState([]);
@@ -25,7 +27,6 @@ const PersonalPictureModalWindow = (props) => {
     const [PictureTags, setPictureTags] = useState([]);
     const [deletedPictureTags, setDeletedPictureTags] = useState([]);
     const [newPictureTags, setNewPictureTags] = useState([]);
-    console.log(deletedPictureTags);
 
 
     // ALREADY CREATED PICTURE INFOS FUNCTIONS
@@ -119,6 +120,9 @@ const PersonalPictureModalWindow = (props) => {
         deletedPictureTags.forEach(t => {
             deleteTag(t.id);
         });
+        getOnePicture(pictureId).then(data => {
+            setCurrentPicture(data);
+        });
         alert(response);
     };
     useEffect(() => {
@@ -139,14 +143,16 @@ const PersonalPictureModalWindow = (props) => {
                 <div className="modal-mainLayer_block">
                     <section className="image-section">
                         <div className="image-section_photochange">
-                            <button>Сбросить загруженное фото</button>
-                            <input type="file" onChange={(e) => setImg(e.target.files[0])}></input>
+                            <button onClick={() => setImg('')}>Сбросить загруженное фото</button>
+                            <input files={img} type="file" accept="image/*" onChange={(e) => setImg(e.target.files[0])}></input>
                         </div>
                         <div className="image-section_background" style={{ "backgroundImage": `url(${process.env.REACT_APP_API_URL + currentPicture.img})` }} alt='' />
                         <img className="image-section_image" src={process.env.REACT_APP_API_URL + currentPicture.img} alt='' />
                     </section>
                     <section className="info-section">
-                        <article className="info-section_type">
+                        <button className="modal-mainLayer_block-closeButton">close</button>
+                        <button onClick={() => acceptLoadChanges()}>Внести изменения</button>
+                        <article className="persCab_info-section_type">
                             <select onChange={(e) => setType(getOptionsInfo(e.target, e.target.selectedIndex))}>
                                 {
                                     (picture.type.map(type => {
@@ -162,79 +168,81 @@ const PersonalPictureModalWindow = (props) => {
                                 }
                             </select>
                         </article>
-                        <article className="info-section_header">
-                            <button className="modal-mainLayer_block-closeButton">close</button>
-                            <button onClick={() => acceptLoadChanges()}>Внести изменения</button>
-                            <input value={header} onChange={(e) => setHeader(e.target.value)}></input>
-                        </article>
-                        <section className="info-section_description">
-                            <h1>DESCRIPTION</h1>
-                            <input value={description} onChange={(e) => setDescription(e.target.value)}></input>
-                        </section>
-                        <h2>ADD. INFO</h2>
-                        {
-                            (PictureInfo ?
-                                PictureInfo.map(pictureI => {
-                                    return (
-                                        <section key={pictureI.id} className="info-section_addInfo">
-                                            <input value={pictureI.title} onChange={(e) => changePictureInfo('title', e.target.value, pictureI.id)}></input>
-                                            <input value={pictureI.description} onChange={(e) => changePictureInfo('description', e.target.value, pictureI.id)}></input>
-                                            <button onClick={() => deletePictureInfo(pictureI)}>Удалить</button>
-                                        </section>
-                                    )
-                                })
-                                :
-                                null
-                            )
-                        }
-                        <section className="info-section_newAddInfo"> {/* ЗОЗДАНИЕ ДОПОЛНИТЕЛЬНЫХ ПАРАМЕТРОВ К КАРТИНКЕ */}
-                            <button onClick={() => addNewPictureInfo()}>Добавить характеристику</button>
-                            {
-                                (newPictureInfo.map(info => {
-                                    return (
-                                        <section key={info.number} className="info-section_newAddInfo_block">
-                                            <input value={info.title} onChange={(e) => changeNewPictureInfo('title', e.target.value, info.number)}></input>
-                                            <input value={info.description} onChange={(e) => changeNewPictureInfo('description', e.target.value, info.number)}></input>
-                                            <button onClick={() => deleteNewPictureInfo(info.number)}>Удалить</button>
-                                        </section>
-                                    )
-                                }))
-                            }
-                        </section>
-                        <h2>TAGS</h2>
-                        <section className="info-section_tags">
 
+                        <article className="persCab_info-section_header">
+                            <textarea value={header} onChange={(e) => setHeader(e.target.value)}></textarea>
+                        </article>
+                        <section className="persCab_info-section_description">
+                            <h1>DESCRIPTION</h1>
+                            <textarea value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+                        </section>
+
+                        <section className="persCab_info-section_addInfo">
+                            <h2>ADD. INFO</h2>
                             {
-                                (PictureTags ?
-                                    PictureTags.map(tag => {
+                                (PictureInfo ?
+                                    PictureInfo.map(pictureI => {
                                         return (
-                                            <div>
-                                                <input value={tag.text} key={tag.id} onChange={(e) => changePictureTag('text', e.target.value, tag.id)}></input>
-                                                <button onClick={() => deletePictureTag(tag)}>Удалить</button>
-                                            </div>
+                                            <section key={pictureI.id} className='addInfo__block'>
+                                                <input className='addInfo__block-title' value={pictureI.title} onChange={(e) => changePictureInfo('title', e.target.value, pictureI.id)}></input>
+                                                <textarea className='addInfo__block-description' value={pictureI.description} onChange={(e) => changePictureInfo('description', e.target.value, pictureI.id)}></textarea>
+                                                <button className="deleteButton" onClick={() => deletePictureInfo(pictureI)}>Удалить</button>
+                                            </section>
                                         )
                                     })
                                     :
                                     null
                                 )
                             }
-                            <section className="info-section_tags_newTags">
-                                <button onClick={() => addNewPictureTag()}>Добавить тэг</button>
-                                {
-                                    (newPictureTags ?
-                                        newPictureTags.map(tag => {
-                                            return (
-                                                <div>
-                                                    <input value={tag.text} key={tag.number} onChange={(e) => changeNewPictureTag('text', e.target.value, tag.number)}></input>
-                                                    <button onClick={() => deleteNewPictureTag(tag.number)}>Удалить</button>
-                                                </div>
-                                            )
-                                        })
-                                        :
-                                        null
+                        </section>
+
+                        <section className="persCab_info-section_newAddInfo"> {/* ЗОЗДАНИЕ ДОПОЛНИТЕЛЬНЫХ ПАРАМЕТРОВ К КАРТИНКЕ */}
+                            <button onClick={() => addNewPictureInfo()}>Добавить характеристику</button>
+                            {
+                                (newPictureInfo.map(info => {
+                                    return (
+                                        <section key={info.number} className="newAddInfo_block">
+                                            <input className='newAddInfo__block-title' value={info.title} onChange={(e) => changeNewPictureInfo('title', e.target.value, info.number)}></input>
+                                            <textarea className='newAddInfo__block-description' value={info.description} onChange={(e) => changeNewPictureInfo('description', e.target.value, info.number)}></textarea>
+                                            <button onClick={() => deleteNewPictureInfo(info.number)}>Удалить</button>
+                                        </section>
                                     )
-                                }
-                            </section>
+                                }))
+                            }
+                        </section>
+                        <h2 className="persCab_info-section_tags-header">#TAGS</h2>
+                        <section className="persCab_info-section_tags">
+                            {
+                                (PictureTags ?
+                                    PictureTags.map(tag => {
+                                        return (
+                                            <section className="section_tags-block">
+                                                <input value={tag.text} key={tag.id} onChange={(e) => changePictureTag('text', e.target.value, tag.id)}></input>
+                                                <button onClick={() => deletePictureTag(tag)}>Удалить</button>
+                                            </section>
+                                        )
+                                    })
+                                    :
+                                    null
+                                )
+                            }
+                        </section>
+                        <button onClick={() => addNewPictureTag()}>Добавить тэг</button>
+                        <section className="persCab_info-section_newTags">
+                            {
+                                (newPictureTags ?
+                                    newPictureTags.map(tag => {
+                                        return (
+                                            <section className="section_newTags-block">
+                                                <input value={tag.text} key={tag.number} onChange={(e) => changeNewPictureTag('text', e.target.value, tag.number)}></input>
+                                                <button onClick={() => deleteNewPictureTag(tag.number)}>Удалить</button>
+                                            </section>
+                                        )
+                                    })
+                                    :
+                                    null
+                                )
+                            }
                         </section>
                     </section>
                 </div>

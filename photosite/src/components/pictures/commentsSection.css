@@ -1,0 +1,36 @@
+.comments-section{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.comments-section__leavedComments{
+    height: 80%;
+    width: 100%;
+    overflow-y: auto;
+    background-color: tomato;
+    font-size: 15px;
+    
+}
+.leavedComments-comment{
+    width: 95%;
+    max-height: 50px;
+    padding: 5px;
+    overflow:hidden;
+    text-align: justify;
+    background-color: burlywood;
+    margin: 10px;
+}
+.comments-section__createCommentBlock{
+    height: 20%;
+    width: 100%;
+    overflow-y: auto;
+    background-color: rgb(255, 212, 71);
+}
+.createCommentBlock__input{
+    width: 100%;
+    resize: vertical;
+}
+
+.fullSize{
+    max-height: none;
+}

@@ -1,0 +1,133 @@
+.persCab_info-section_header{
+    display: flex;
+    justify-content: center;
+    padding: 25px;
+    font-family: Sverdlovsk;
+    letter-spacing: 5px;
+    background-color:black;
+    color: white;
+    border-top: solid white 3px;   
+    border-right: solid white 3px;   
+}
+.persCab_info-section_header textarea{
+    background-color: transparent;
+    color: white;
+    font-size: 45px;
+    font-family: Sverdlovsk;
+    outline: none;
+}
+
+
+.persCab_info-section_description{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.persCab_info-section_description textarea{
+    width: 100%;
+    outline:none; 
+    border:none;
+    background-color: rgb(128, 87, 117, 0.3);
+    resize: vertical;
+}
+.persCab_info-section_description h1{
+    font-family: Sverdlovsk;
+    color: white;
+    font-size: 40px;
+    letter-spacing: 5px;
+    padding: 10px;
+    border: solid 4px white;
+}
+
+.persCab_info-section_addInfo{
+    
+}
+.persCab_info-section_addInfo h2,
+.persCab_info-section_tags-header{
+    font-family: Sverdlovsk;
+    color: white;
+    font-size: 40px;
+    letter-spacing: 5px;
+    text-align: center;
+    padding: 10px;
+    border: solid 4px white;
+}
+
+.persCab_info-section_addInfo .addInfo__block{
+    display: flex;
+    flex-direction: column;
+}
+.persCab_info-section_addInfo .addInfo__block .addInfo__block-title{
+    font-family: Sverdlovsk;
+    border:none;
+    outline: none;
+    background-color: transparent;
+    border-left: solid black 3px;
+    padding-left: 10px;
+    font-size: 35px;
+}
+.persCab_info-section_addInfo .addInfo__block .addInfo__block-description{
+    border: none;
+    outline: none;
+    background-color:rgb(128, 87, 117, 0.3);
+    resize: vertical;
+}
+
+
+.persCab_info-section_newAddInfo{
+
+}
+.persCab_info-section_newAddInfo .newAddInfo_block{
+    display: flex;
+    flex-direction: column;
+}
+.persCab_info-section_newAddInfo .newAddInfo_block .newAddInfo__block-title{
+    font-family: Sverdlovsk;
+    border:none;
+    outline: none;
+    background-color: transparent;
+    border-left: solid black 3px;
+    padding-left: 10px;
+    font-size: 35px;
+}
+
+.persCab_info-section_newAddInfo .newAddInfo_block .newAddInfo__block-description{
+    border: none;
+    outline: none;
+    background-color:rgb(128, 87, 117, 0.3);
+}
+
+
+.persCab_info-section_tags,
+.persCab_info-section_newTags{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+}
+
+.persCab_info-section_tags .section_tags-block,
+.persCab_info-section_newTags .section_newTags-block{
+    display: flex;
+    flex-direction: column;
+}
+
+.deleteButton{
+    border:solid rgb(184, 83, 53) 2px;
+    background-color: transparent;
+    background-color: rgb(158, 19, 19, 0.4);
+    transition: .5s;
+    cursor: pointer;
+}
+.deleteButton:hover{
+    background-color: rgb(158, 19, 19);
+}
+.changeButton{
+    border:solid rgb(255, 229, 174) 2px;
+    background-color: transparent;
+    background-color: rgba(248, 210, 187, 0.4);
+    transition: .5s;
+    cursor: pointer;
+}
+.changeButton:hover{
+    background-color: rgb(255, 255, 255);
+}
