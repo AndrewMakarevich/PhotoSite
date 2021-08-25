@@ -1,11 +1,11 @@
-const {User} = require('../models/models');
+const { User } = require('../models/models');
 const ApiError = require('../error/ApiError');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const uuid = require('uuid');
 const mailService = require('./mailService');
 
-const generateJwt = (id, email, role) =>{
+const generateJwt = (id, email, role) => {
     return jwt.sign({
         id,
         email,
@@ -15,8 +15,8 @@ const generateJwt = (id, email, role) =>{
     });
 };
 
-class userService{
-    async registration(nickname,email,role,password){
+class userService {
+    async registration(nickname, email, role, password) {
         if (!nickname || !email || !password) {
             throw ApiError.badRequest('Одно из полей не заполнено');
         }
@@ -30,7 +30,7 @@ class userService{
                 email
             }
         });
-        if(candidate1 && candidate2){
+        if (candidate1 && candidate2) {
             throw ApiError.badRequest('Пользователь с такой почтой и никнеймом уже существует');
         }
         if (candidate1) {
@@ -39,7 +39,7 @@ class userService{
         if (candidate2) {
             throw ApiError.badRequest('Пользователь с такой почтой уже существует');
         }
-        
+
         const activationLink = uuid.v4();
         const hashPassword = await bcrypt.hash(password, 5);
         const user = await User.create({
@@ -49,69 +49,93 @@ class userService{
             password: hashPassword,
             activationLink
         });
-        await mailService.sendActivationCode(email,`${process.env.API_URL}api/user/activate/${activationLink}`);
+        await mailService.sendActivationCode(email, `${process.env.API_URL}api/user/activate/${activationLink}`);
         const token = generateJwt(user.id, user.email, user.role);
-        return token;           
+        return token;
     }
-    async activate(activationLink){
+    async activate(activationLink) {
         let user = await User.findOne({
-            where:{activationLink}
+            where: { activationLink }
         });
-        if(!user){
+        if (!user) {
             return {
                 message: "пользователь не существует"
             };
         }
         await User.update(
-            {isActivated: true},
-            {where:{activationLink}});
+            { isActivated: true },
+            { where: { activationLink } });
         return {
-            message:"аккаунт успешно активирован"
+            message: "аккаунт успешно активирован"
         }
     }
-    async login(email, password){
-            const user = await User.findOne({
-                where:{email}
-            });
-            if(!user){
-                throw ApiError.badRequest('Пользователь не существует');
-            }
-            if(user.isActivated == false){
-                throw ApiError.badRequest('Аккаунт не активирован');
-            }
-            const passEquals = await bcrypt.compare(password, user.password);
-            if(!passEquals){
-                throw ApiError.badRequest('Неверный пароль');
-            } 
-            const token = generateJwt(user.id, user.email, user.role);
-            return {token};
+    async login(email, password) {
+        const user = await User.findOne({
+            where: { email }
+        });
+        if (!user) {
+            throw ApiError.badRequest('Пользователь не существует');
+        }
+        if (user.isActivated == false) {
+            throw ApiError.badRequest('Аккаунт не активирован');
+        }
+        const passEquals = await bcrypt.compare(password, user.password);
+        if (!passEquals) {
+            throw ApiError.badRequest('Неверный пароль');
+        }
+        const token = generateJwt(user.id, user.email, user.role);
+        return { token };
     }
-    async check(id,email,role){
+    async check(id, email, role) {
         const token = generateJwt(id, email, role);
         return token;
     }
-    async getOne(token){
-        try{
-            if(!token){
+    async getOne(token) {
+        try {
+            if (!token) {
                 throw ApiError.UnauthorizedError("Ошибка авторизации");
             }
-            const tokenInfo =  jwt.decode(token, process.env.SECRET_KEY);
+            const tokenInfo = jwt.decode(token, process.env.SECRET_KEY);
             const user = await User.findOne({
-                where:{
+                where: {
                     id: tokenInfo.id
                 }
             });
-            return {user:{
-                id: user.id,
-                nickname: user.nickname,
-                email: user.email,
-                role: user.role,
-                firstname: user.firstname,
-                secondname: user.secondname
-            }};
-        }catch(e){
+            return {
+                user: {
+                    id: user.id,
+                    nickname: user.nickname,
+                    email: user.email,
+                    role: user.role,
+                    firstname: user.firstname,
+                    secondname: user.secondname
+                }
+            };
+        } catch (e) {
             throw ApiError.badRequest("Ошибка получения информации, попробуйте снова", e);
         }
+    }
+    async getAll(userId) {
+        try {
+            if (userId) {
+                const user = await User.findOne(
+                    { where: { id: userId } }
+                );
+                delete user.dataValues.password;
+                delete user.dataValues.activationLink;
+                console.log(user);
+                return { user };
+            }
+            const users = await User.findAndCountAll();
+            users.rows.forEach(user => {
+                delete user.dataValues.password;
+                delete user.dataValues.activationLink;
+            });
+            return { users };
+        } catch (e) {
+            throw ApiError.badRequest(`Ошибка получения пользователей. ERROR: ${e}`);
+        }
+
     }
 }
 

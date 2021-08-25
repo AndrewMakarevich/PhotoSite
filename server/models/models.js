@@ -37,9 +37,16 @@ const PictureInfo = sequelize.define('picture_info', {
 });
 const Comment = sequelize.define('comment', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    text: { type: DataTypes.STRING, allowNull: false },
+    text: { type: DataTypes.TEXT, allowNull: false },
 });
 const CommentLike = sequelize.define('comment_like', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+});
+const ReplyComment = sequelize.define('reply_comment', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    text: { type: DataTypes.TEXT, allowNull: false }
+});
+const ReplyCommentLike = sequelize.define('reply_comment_like', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
 });
 
@@ -56,6 +63,12 @@ Comment.belongsTo(User);
 User.hasMany(CommentLike);
 CommentLike.belongsTo(User);
 
+User.hasMany(ReplyComment);
+ReplyComment.belongsTo(User);
+
+User.hasMany(ReplyCommentLike);
+ReplyCommentLike.belongsTo(User);
+
 Picture.hasMany(PictureLike, { as: "likes" });
 PictureLike.belongsTo(Picture);
 
@@ -71,8 +84,14 @@ Comment.belongsTo(Picture);
 Type.hasMany(Picture);
 Picture.belongsTo(Type);
 
-Comment.hasMany(CommentLike, { as: "comment_likes" });
+Comment.hasMany(CommentLike);
 CommentLike.belongsTo(Comment);
+
+Comment.hasMany(ReplyComment, { as: "reply_comments" });
+ReplyComment.belongsTo(Comment);
+
+ReplyComment.hasMany(ReplyCommentLike);
+ReplyCommentLike.belongsTo(ReplyComment);
 
 module.exports = {
     User,
@@ -82,5 +101,7 @@ module.exports = {
     PictureLike,
     PictureTag,
     Comment,
-    CommentLike
+    CommentLike,
+    ReplyComment,
+    ReplyCommentLike
 };

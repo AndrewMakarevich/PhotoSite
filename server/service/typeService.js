@@ -37,33 +37,38 @@ class typeService {
         return type;
     }
     async deleteOne(id) {
-        const type = await Type.findOne({
-            where: { id }
-        });
-        const undelType = await Type.findOne({
-            where: { name: "Не определен" }
-        });
-        const picture = await Picture.findAll({
-            where: { typeId: id }
-        });
-        if (!type) {
-            throw ApiError.badRequest('Данной категории не существует');
-        }
-        if (type.id == undelType.id) {
-            throw ApiError.badRequest('Данный тип нельзя удалить');
-        }
-        if (picture) {
-            picture.forEach(picture => {
-                picture.update({
-                    typeId: undelType.id
-                });
+        try {
+            const type = await Type.findOne({
+                where: { id }
             });
+            const undelType = await Type.findOne({
+                where: { name: "Не определен" }
+            });
+            const picture = await Picture.findAll({
+                where: { typeId: id }
+            });
+            if (!type) {
+                throw ApiError.badRequest('Данной категории не существует');
+            }
+            if (undelType && type.id == undelType.id) {
+                throw ApiError.badRequest('Данный тип нельзя удалить');
+            }
+            if (picture) {
+                picture.forEach(picture => {
+                    picture.update({
+                        typeId: undelType.id
+                    });
+                });
+            }
+            const typeName = type.name;
+            await Type.destroy({
+                where: { id }
+            });
+            return `категория ${typeName} удалена`;
+        } catch (e) {
+            throw ApiError.badRequest(e);
         }
-        const typeName = type.name;
-        await Type.destroy({
-            where: { id }
-        });
-        return `категория ${typeName} удалена`;
+
     }
     async changeOne(id, name) {
         try {

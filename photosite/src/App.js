@@ -54,14 +54,19 @@ const App = observer(() => {
   useEffect(() => {
     animatedInputs();
     const token = localStorage.getItem('token');
-    if (token) {
-      check().then(data => {
-        user.setUser(data);
-        user.setIsAuth(true);
-      });
-    } else {
+    try {
+      if (token) {
+        check().then(data => {
+          user.setUser(data);
+          user.setIsAuth(true);
+        });
+      } else {
+        localStorage.removeItem('token');
+      }
+    } catch (e) {
       localStorage.removeItem('token');
     }
+
 
   }, []);
 

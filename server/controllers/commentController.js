@@ -1,4 +1,4 @@
-const { Comment, CommentLike, User } = require('../models/models');
+const { Comment, CommentLike, User, ReplyComment } = require('../models/models');
 const ApiError = require('../error/ApiError');
 const jwt = require('jsonwebtoken');
 
@@ -7,15 +7,21 @@ function getInfoFromToken(token) {
 }
 
 class CommentController {
-    async create(req, res) {
+    async create(req, res, next) {
         try {
             const { text, pictureId } = req.body;
             const token = req.headers.authorization.split(' ')[1];
             const tokenInfo = await getInfoFromToken(token);
-            const comment = await Comment.create({ text, userId: tokenInfo.id, pictureId });
-            return res.json({ comment });
+            const textFulness = text.split(' ').join('');
+            if (textFulness) {
+                const comment = await Comment.create({ text, userId: tokenInfo.id, pictureId });
+                return res.json({ comment });
+            } else {
+                throw ApiError.badRequest('Сервер: Комментарий пуст');
+            }
+
         } catch (e) {
-            return res.json(ApiError.badRequest(e));
+            next(e);
         }
     }
     async getAll(req, res) {
@@ -23,27 +29,27 @@ class CommentController {
             const { pictureId, userId } = req.query;
             if (!pictureId && !userId) {
                 const comments = await Comment.findAll({
-                    include: [{ model: CommentLike, as: "comment_likes" }]
+                    include: [{ model: CommentLike, as: "comment_likes" }, { model: ReplyComment, as: "reply_comments" }]
                 });
                 return res.json({ comments });
             }
             if (!pictureId && userId) {
                 const comments = await Comment.findAll({
                     where: { userId },
-                    include: [{ model: CommentLike, as: "comment_likes" }]
+                    include: [{ model: CommentLike, as: "comment_likes" }, { model: ReplyComment, as: "reply_comments" }]
                 });
                 return res.json({ comments });
             }
             if (pictureId && !userId) {
                 const comments = await Comment.findAll({
                     where: { pictureId },
-                    include: [{ model: CommentLike, as: "comment_likes" }]
+                    include: [{ model: CommentLike, as: "comment_likes" }, { model: ReplyComment, as: "reply_comments" }]
                 });
                 return res.json({ comments });
             }
             const comments = await Comment.findAll({
                 where: { pictureId, userId },
-                include: [{ model: CommentLike, as: "comment_likes" }]
+                include: [{ model: CommentLike, as: "comment_likes" }, { model: ReplyComment, as: "reply_comments" }]
             });
             return res.json({ comments });
         } catch (e) {
@@ -57,7 +63,6 @@ class CommentController {
     async deleteOne(req, res) {
         try {
             const id = req.params.id;
-            const { pictureId } = req.query;
             const token = req.headers.authorization.split(' ')[1];
             const tokenInfo = await getInfoFromToken(token);
             const comment = await Comment.findOne({

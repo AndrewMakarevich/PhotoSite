@@ -21,7 +21,6 @@ class PictureController {
         try {
 
             let { header, description, typeId, info, tags } = req.body;
-            console.log("INFO" + header, description, typeId, info, tags);
             const token = req.headers.authorization.split(' ')[1];
             if (!token) {
                 throw ApiError.badRequest('Не авторизован');

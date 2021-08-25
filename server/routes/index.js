@@ -8,6 +8,7 @@ const pictureTagRouter = require('./pictureTagRouter');
 const typeRouter = require('./typeRouter');
 const commentRouter = require('./commentRouter');
 const commentLikeRouter = require('./commentLikeRouter');
+const replyCommentRouter = require('./replyCommentRouter');
 
 router.use('/user', userRouter);
 router.use('/picture', pictureRouter);
@@ -17,6 +18,7 @@ router.use('/pictureTag', pictureTagRouter);
 router.use('/type', typeRouter);
 router.use('/comments', commentRouter);
 router.use('/commentLikes', commentLikeRouter);
+router.use('/replyComment', replyCommentRouter);
 
 
 module.exports = router;

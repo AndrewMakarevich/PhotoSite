@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './pictureModalWindow.css';
 import { getOnePicture } from '../../http/pictureAPI';
-import LikeItem from '../personalCabinet/likeBlock/likeItem';
+import LikeItem from './likeBlock/likeItem';
 import InfoAndCommentsContent from './pictureModalWindowPagContent';
 
 const PictureModalWindow = ({ pictureId }) => {

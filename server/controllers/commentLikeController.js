@@ -1,76 +1,79 @@
-const {CommentLike} = require('../models/models');
+const { CommentLike } = require('../models/models');
 const ApiError = require("../error/ApiError");
 const jwt = require('jsonwebtoken');
 
-function getInfoFromToken(token){
+function getInfoFromToken(token) {
     return jwt.decode(token, process.env.SECRET_KEY);
 }
 
 class CommentLikeController {
-    async create(req,res){
-        try{
-            const {commentId} = req.body;
+    async create(req, res, next) {
+        try {
+            const { commentId } = req.body;
             const token = req.headers.authorization.split(' ')[1];
             const tokenInfo = await getInfoFromToken(token);
             const likeExistence = await CommentLike.findOne({
-                where:{commentId, userId: tokenInfo.id}
+                where: { commentId, userId: tokenInfo.id }
             });
-            if(likeExistence){
-                return res.json(ApiError.badRequest('Лайк уже поставлен'));
+            if (likeExistence) {
+                await CommentLike.destroy({
+                    where: { id: likeExistence.id }
+                });
+                return res.json('Лайк успешно убран');
             }
-            const commentLike = await CommentLike.create({commentId, userId: tokenInfo.id});  
-            return res.json({commentLike});
-        }catch(e){
-            return res.json(ApiError.badRequest('Ошибка записи лайка'));
+            await CommentLike.create({ commentId, userId: tokenInfo.id });
+            return res.json('Лайк успешно поставлен');
+        } catch (e) {
+            next(e);
         }
-        
+
     }
-    async getAll(req,res){
-        const {commentId, userId} = req.query;
-        if(commentId && userId){
-            const commentLikes = await CommentLike.findAll({
-                where:{commentId,userId}
+    async getAll(req, res) {
+        const { commentId, userId } = req.query;
+        if (commentId && userId) {
+            const commentLikes = await CommentLike.findAndCountAll({
+                where: { commentId, userId }
             });
-            return res.json({commentLikes});
+            return res.json({ commentLikes });
         }
-        if(!commentId && userId){
-            const commentLikes = await CommentLike.findAll({
-                where:{userId}
+        if (!commentId && userId) {
+            const commentLikes = await CommentLike.findAndCountAll({
+                where: { userId }
             });
-            return res.json({commentLikes});
+            return res.json({ commentLikes });
         }
-        if(commentId && !userId){
-            const commentLikes = await CommentLike.findAll({
-                where:{commentId}
+        if (commentId && !userId) {
+            const commentLikes = await CommentLike.findAndCountAll({
+                where: { commentId }
             });
-            return res.json({commentLikes});
+            return res.json({ commentLikes });
         }
-        const commentLikes = await CommentLike.findAll();
-        return res.json({commentLikes});
+        const commentLikes = await CommentLike.findAndCountAll();
+        return res.json({ commentLikes });
     }
-    async getOne(req,res){
-        
+    async getOne(req, res) {
+
     }
-    async deleteOne(req,res){
-        const {commentId} = req.query;
-        if(!commentId){
+    async deleteOne(req, res) {
+        const { commentId } = req.query;
+        if (!commentId) {
             return res.json('Ошибка переданных данных');
         }
         const token = req.headers.authorization.split(' ')[1];
         const tokenInfo = getInfoFromToken(token);
         const commentLike = await CommentLike.findOne({
-            where:{commentId, userId: tokenInfo.id}
+            where: { commentId, userId: tokenInfo.id }
         });
-        if(!commentLike){
+        if (!commentLike) {
             return res.json(ApiError.badRequest('Лайк не поставлен'));
         }
         await CommentLike.destroy({
-            where:{commentId, userId: tokenInfo.id}
+            where: { commentId, userId: tokenInfo.id }
         });
-        return res.json({message:'Лайк удален'});
+        return res.json({ message: 'Лайк удален' });
     }
-    async deleteAll(req,res){
-        
+    async deleteAll(req, res) {
+
     }
 }
 

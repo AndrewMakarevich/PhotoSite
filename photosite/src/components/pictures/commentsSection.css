@@ -9,16 +9,61 @@
     overflow-y: auto;
     background-color: tomato;
     font-size: 15px;
-    
+    display: flex;
+    flex-direction: column;
 }
-.leavedComments-comment{
-    width: 95%;
-    max-height: 50px;
-    padding: 5px;
-    overflow:hidden;
+.leavedComments-commentBlock{
+    position: relative;
+    width: 97%;
+    margin-bottom: 10px;
+    align-self: center;
+    /* align-items: center; */
+}
+.leavedComments-commentBlock_addInfo{
+    display: flex;
+    justify-content: space-between;
+}
+.leavedComments-commentBlock__comment{
+    width:100%;
+    height:75px;
+    overflow:auto;
     text-align: justify;
     background-color: burlywood;
-    margin: 10px;
+    font-size: 15px;
+    resize: none;
+    cursor:pointer;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.leavedComments-commentBlock__buttonsBlock{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+}
+.commentBlock__buttonsBlock-likeItem{
+    display: flex;
+    flex-direction: row;
+}
+.commentBlock__buttonsBlock-likeItem .likeButton{
+    border:none;
+    background-color:transparent;
+    
+}
+.commentBlock__buttonsBlock-likeItem .amountOfLikesItem{
+    font-size: 20px;
+    color:rgb(17, 33, 83);
+}
+.commentBlock__buttonsBlock-likeItem .likeButton .svgUnLikedIcon{
+    cursor: pointer;
+    fill: rgb(202, 227, 243);
+    transition: .3s;
+}
+.commentBlock__buttonsBlock-likeItem .likeButton:active svg{
+    transform: scale(0.6)
+}
+.commentBlockToEdit{
+    background-color: rgb(179, 201, 243);
 }
 .comments-section__createCommentBlock{
     height: 20%;
@@ -31,6 +76,17 @@
     resize: vertical;
 }
 
+
 .fullSize{
-    max-height: none;
+   
+}
+.disabledButton{
+    background-color: rgb(216, 215, 212);
+    color:rgb(104, 104, 104);
+    pointer-events: none;
+}
+.svgLikedIcon{
+    cursor: pointer;
+    fill:rgb(57, 59, 202);
+    transition: .3s;
 }

@@ -12,3 +12,7 @@ export const getPictureComments = async (pictureId) => {
     const { data } = await $host.get(`/api/comments?pictureId=${pictureId}`);
     return data;
 };
+export const deleteComment = async (id) => {
+    const { data } = await $authHost.delete(`/api/comments/${id}`);
+    return data;
+};

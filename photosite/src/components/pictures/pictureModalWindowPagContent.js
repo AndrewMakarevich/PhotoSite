@@ -1,73 +1,45 @@
 import React, { useEffect, useState, useContext } from 'react';
 import './commentsSection.css';
+import { observer } from 'mobx-react-lite';
 import deployComment from './commentDeploymentScript';
-import { postComment, postCommentChanges, getPictureComments } from '../../http/commentsAPI';
+import { postComment, getPictureComments } from '../../http/commentsAPI';
 import { Context } from '../../index';
+import CommentItem from "./commentBlock/commentItem";
 
-const InfoAndCommentsContent = ({ picture, currentContent }) => {
+const InfoAndCommentsContent = observer(({ picture, currentContent }) => {
     const { user } = useContext(Context);
-    const [comments, setComments] = useState('');
+    const { pictureComments } = useContext(Context);
+    // const [comments, setComments] = useState([]);
     const [comment, setComment] = useState('');
-    const [changedComments, setChangedComments] = useState([]);
-    console.log(changedComments);
-    const changeComment = (id, text) => {
-        let alreadyExist;
-        for (let i = 0; i < changedComments.length; i++) {
-            if (changedComments[i].id === id) {
-                alreadyExist = true;
-                break;
-            } else {
-                alreadyExist = false;
-                continue;
-            }
-        }
-        if (alreadyExist) {
-            setChangedComments(changedComments.map(comment => {
-                if (comment.id === id) {
-                    return { ...comment, ['text']: text }
-                } else {
-                    return comment;
-                }
-            }));
-        } else {
-            setChangedComments([...changedComments, { id: id, text: text, userId: user._user.id, pictureId: picture.id }]);
-        }
-    };
-    const postCommentChangesFunction = async (id) => {
-        try {
-            let text;
-            for (let i = 0; i < changedComments.length; i++) {
-                if (changedComments[i].id === id) {
-                    text = changedComments[i].text;
-                    break;
-                } else {
-                    continue;
-                }
-            }
-            if (text) {
-                const response = await postCommentChanges(id, text);
-                getPictureComments(picture.id).then(data => setComments(data.comments)).catch(e => alert(e.response.data.message));
-                alert(response);
-            }
-        } catch (e) {
-            alert(e.response.data.message);
-        }
-    }
+
     const postCommentFunction = async (text, pictureId) => {
-        const response = await postComment(text, pictureId);
-        getPictureComments(picture.id).then(data => setComments(data.comments)).catch(e => alert(e.response.data.message));
-        return alert(response);
+        try {
+            const textFulness = text.split(' ').join('');
+            if (textFulness) {
+                const response = await postComment(text, pictureId);
+                getPictureComments(picture.id).then(data => pictureComments.setPictureComments(data.comments)).catch(e => alert(e.response.data.message));
+                return alert(response);
+            }
+            return alert('Комментарий пуст');
+
+        } catch (e) {
+            return alert(e.response.data.message);
+        }
     };
+
     useEffect(() => {
         if (currentContent === 'comments') {
             deployComment();
+
         }
     }, [currentContent]);
+
     useEffect(() => {
         if (picture.id) {
-            getPictureComments(picture.id).then(data => setComments(data.comments)).catch(e => alert(e.response.data.message));
+            getPictureComments(picture.id).then(data => pictureComments.setPictureComments(data.comments)).catch(e => alert(e.response.data.message));
         }
     }, [picture]);
+
     if (currentContent === 'info') {
         return (
             <section className="info-section">
@@ -112,20 +84,11 @@ const InfoAndCommentsContent = ({ picture, currentContent }) => {
             <section className="comments-section">
                 <section className="comments-section__leavedComments">
                     {
-                        (comments.map(comment => {
+                        (pictureComments._pictureComments.map((comment) => {
                             return (
-                                comment.userId === user._user.id ?
-                                    <div key={comment.id}>
-                                        <textarea className={`leavedComments-comment`} onChange={(e) => changeComment(comment.id, e.target.value)}>{comment.text}</textarea>
-                                        <button className={`leavedComments-scaleComment`}>scale</button>
-                                        <button onClick={() => postCommentChangesFunction(comment.id)}>make changes</button>
-                                    </div>
-                                    :
-                                    <div key={comment.id}>
-                                        <div className={`leavedComments-comment`}>{comment.text}</div>
-                                        <button className={`leavedComments-scaleComment`}>scale</button>
-                                    </div>
+                                <CommentItem picture={picture} comment={comment} />
                             )
+
                         }))
                     }
                 </section>
@@ -137,6 +100,6 @@ const InfoAndCommentsContent = ({ picture, currentContent }) => {
         )
     }
 
-};
+});
 
 export default InfoAndCommentsContent;

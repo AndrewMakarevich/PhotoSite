@@ -8,6 +8,7 @@ import reportWebVitals from './reportWebVitals';
 import UserStore from './store/userStore';
 import AboutUsStore from './store/aboutUsStore';
 import PictureStore from './store/pictureStore';
+import PictureCommentsStore from './store/pictureCommentsStore';
 
 export const Context = createContext(null);
 
@@ -16,7 +17,8 @@ ReactDOM.render(
   <Context.Provider value={{
     "user": new UserStore(),
     "aboutUs": new AboutUsStore(),
-    "picture": new PictureStore()
+    "picture": new PictureStore(),
+    "pictureComments": new PictureCommentsStore()
   }}>
     <BrowserRouter>
       <App />
