@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import './commentsSection.css';
 import { observer } from 'mobx-react-lite';
-import deployComment from './commentDeploymentScript';
 import { postComment, getPictureComments } from '../../http/commentsAPI';
 import { Context } from '../../index';
 import CommentItem from "./commentBlock/commentItem";
@@ -29,7 +28,6 @@ const InfoAndCommentsContent = observer(({ picture, currentContent }) => {
 
     useEffect(() => {
         if (currentContent === 'comments') {
-            deployComment();
 
         }
     }, [currentContent]);

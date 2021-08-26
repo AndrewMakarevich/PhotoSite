@@ -1,0 +1,33 @@
+.leavedReplyComments-replyCommentBlock{
+    width:97%;
+}
+.leavedReplyComments-replyCommentBlock_addInfo{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+.leavedReplyComments-replyCommentBlock__replyComment{
+    width: 100%;
+    height: 75px;
+    resize: none;
+    cursor: pointer;
+}
+.leavedReplyComments-replyCommentBlock__buttonsBlock{
+    display: flex;
+    justify-content: space-between;
+}
+.replyCommentBlock__buttonsBlock-likeItem{
+    display: flex;
+    flex-direction: row;
+}
+.replyCommentBlock__buttonsBlock-likeItem .likeButton{
+    background-color: transparent;
+    border: none;
+}
+.replyCommentBlock__buttonsBlock-likeItem .likeButton:active svg{
+    transform: scale(0.6);
+}
+
+.hidden{
+    display: none;
+}

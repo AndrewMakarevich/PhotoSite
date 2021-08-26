@@ -2,10 +2,14 @@ import React, { useContext, useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../../../index';
 // import deployComment from '../commentDeploymentScript';
-import redactComment from '../commentRedactAnimationFunc';
-import { getUsers } from '../../../http/userAPI';
+import { deployComment } from '../commentDeploymentScript';
+import { redactComment } from '../commentRedactAnimationFunc';
+import { showReplyComments } from './showReplyComments';
+import ReplyCommentItem from './replyCommentItem';
+import { getUser } from '../../../http/userAPI';
 import { getPictureComments, postCommentChanges, deleteComment } from '../../../http/commentsAPI';
 import { likeComment, getCommentLikes } from '../../../http/commentLikeAPI';
+import { getAllReplyComments } from '../../../http/replyCommentAPI';
 
 
 const CommentItem = observer(({ picture, comment }) => {
@@ -16,9 +20,10 @@ const CommentItem = observer(({ picture, comment }) => {
     const [amountOfLikes, setAmountOfLikes] = useState('');
     const [isLiked, setIsLiked] = useState('');
     const [userInfo, setUserInfo] = useState({ user: { nickname: "Загружается" } });
-    console.log(new Date(comment.createdAt).getHours);
-    const deleteCommentFunction = async (id) => {
+    const [replyComments, setReplyComments] = useState([]);
 
+
+    const deleteCommentFunction = async (id) => {
         try {
             let answer = window.confirm('Вы уверены, что хотите удалить свой комментарий');
             if (answer) {
@@ -75,7 +80,8 @@ const CommentItem = observer(({ picture, comment }) => {
         checkIfLikedFunction();
     }, [commentLikeInfo]);
     useEffect(() => {
-        getUsers(comment.userId).then(data => setUserInfo(data)).catch((e) => alert(e.response.data.message));
+        getUser(comment.userId).then(data => setUserInfo(data)).catch((e) => alert(e.response.data.message));
+        getAllReplyComments(comment.id).then((data) => setReplyComments(data.rows)).catch((e) => alert(e));
     }, [comment]);
     useEffect(() => {
         getCommentLikesInfo(comment.id);
@@ -91,10 +97,11 @@ const CommentItem = observer(({ picture, comment }) => {
                 <textarea readOnly defaultValue={comment.text} className='leavedComments-commentBlock__comment' onChange={(e) => setChangedComment(e.target.value)} />
                 <section className="leavedComments-commentBlock__buttonsBlock">
                     <section>
-                        <button className='leavedComments-scaleCommentButton'>Развернуть</button>
+                        <button className='leavedComments-scaleCommentButton' onClick={(e) => deployComment(e.target)}>Развернуть</button>
                         <button onClick={(e) => redactComment(e.target)} className="leavedComments-commentBlock__redactButton">redact</button>
                         <button className="leavedComments-commentBlock__postButton disabledButton" onClick={() => postCommentChangesFunction(comment.id)}>post changes</button>
                         <button onClick={() => deleteCommentFunction(comment.id)}>delete</button>
+                        <button className="leavedComments-commentBlock__showReplyCommentsButton" onClick={(e) => showReplyComments(e.target)}>Ответы</button>
                     </section>
                     <section className='commentBlock__buttonsBlock-likeItem'>
                         {
@@ -113,10 +120,17 @@ const CommentItem = observer(({ picture, comment }) => {
                         }
                         <div className="amountOfLikesItem">{amountOfLikes}</div>
                     </section>
+                </section>
+                <section className="commentBlock-leavedReplyComments hidden">
+                    {
+                        replyComments.map(replyComment => {
+                            return (
+                                <ReplyCommentItem replyComment={replyComment} userInfo={userInfo} />
+                            )
+                        })
+                    }
 
                 </section>
-
-
             </div>
             :
             <div className="leavedComments-commentBlock" key={comment.id}>
@@ -124,11 +138,11 @@ const CommentItem = observer(({ picture, comment }) => {
                     <div>{userInfo.user.nickname}</div>
                     <div>{`${new Date(comment.createdAt).getFullYear()} ${new Date(comment.createdAt).getDate()} ${new Date(comment.createdAt).toLocaleString('default', { month: 'long' })}`}</div>
                 </section>
-
                 <div className={`leavedComments-commentBlock__comment`}>{comment.text}</div>
                 <section className="leavedComments-commentBlock__buttonsBlock">
                     <section>
-                        <button className='leavedComments-scaleCommentButton'>Развернуть</button>
+                        <button className='leavedComments-scaleCommentButton' onClick={(e) => deployComment(e.target)} > Развернуть</button>
+                        <button className="leavedComments-commentBlock__showReplyCommentsButton" onClick={(e) => showReplyComments(e.target)}>Ответы</button>
                     </section>
                     <section className='commentBlock__buttonsBlock-likeItem'>
                         {
@@ -147,8 +161,15 @@ const CommentItem = observer(({ picture, comment }) => {
                         }
                         <div className="amountOfLikesItem">{amountOfLikes}</div>
                     </section>
-
-
+                </section>
+                <section className="commentBlock-leavedReplyComments hidden">
+                    {
+                        replyComments.map(replyComment => {
+                            return (
+                                <ReplyCommentItem replyComment={replyComment} userInfo={userInfo} />
+                            )
+                        })
+                    }
                 </section>
             </div>
     )

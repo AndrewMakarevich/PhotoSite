@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { ReplyComment } = require('../models/models');
+const { ReplyComment, ReplyCommentLike } = require('../models/models');
 const ApiError = require('../error/ApiError');
 
 class ReplyCommentService {
@@ -17,25 +17,27 @@ class ReplyCommentService {
     async getAll(userId, commentId) {
         try {
             if (!userId && !commentId) {
-                const replyComments = await ReplyComment.findAndCountAll();
+                const replyComments = await ReplyComment.findAndCountAll(
+                    { include: [{ model: ReplyCommentLike, as: "likes" }] }
+                );
                 return replyComments;
             }
             if (!userId && commentId) {
                 const replyComments = await ReplyComment.findAndCountAll(
-                    { where: { commentId } }
+                    { where: { commentId }, include: [{ model: ReplyCommentLike, as: "likes" }] }
                 );
                 return replyComments;
             }
             if (userId && !commentId) {
                 const replyComments = await ReplyComment.findAndCountAll(
-                    { where: { userId } }
+                    { where: { userId }, include: [{ model: ReplyCommentLike, as: "likes" }] }
                 );
                 return replyComments;
             }
             const replyComments = await ReplyComment.findAndCountAll(
-                { where: { userId, commentId } }
+                { where: { userId, commentId }, include: [{ model: ReplyCommentLike, as: "likes" }] }
             );
-            return { replyComments };
+            return replyComments;
         } catch (e) {
             throw ApiError.badRequest(`ERROR ${e}`);
         }

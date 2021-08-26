@@ -19,7 +19,7 @@ export const getUserInfo = async () => {
     const { data } = await $authHost.get('api/user/info');
     return data.userInfo;
 };
-export const getUsers = async (userId) => {
+export const getUser = async (userId) => {
     const { data } = await $host.get(`api/user/users?userId=${userId}`);
     return data;
 };

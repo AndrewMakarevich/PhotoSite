@@ -90,7 +90,7 @@ CommentLike.belongsTo(Comment);
 Comment.hasMany(ReplyComment, { as: "reply_comments" });
 ReplyComment.belongsTo(Comment);
 
-ReplyComment.hasMany(ReplyCommentLike);
+ReplyComment.hasMany(ReplyCommentLike, { as: "likes" });
 ReplyCommentLike.belongsTo(ReplyComment);
 
 module.exports = {
