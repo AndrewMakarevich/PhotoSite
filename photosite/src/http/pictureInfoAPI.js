@@ -1,4 +1,4 @@
-import { $host, $authHost } from './index';
+import { $authHost } from './index';
 
 export const deleteInfo = async (id) => {
     const data = await $authHost.delete(`api/pictureInfo/${id}`);

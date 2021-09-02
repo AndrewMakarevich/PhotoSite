@@ -1,4 +1,4 @@
-import { $host, $authHost } from './index';
+import { $authHost } from './index';
 
 export const createLike = async (pictureId) => {
     const { data } = await $authHost.post('/api/pictureLikes', { pictureId });

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { getOnePicture, updatePicture } from '../../../http/pictureAPI';
 import { deleteInfo } from '../../../http/pictureInfoAPI';
 import { deleteTag } from '../../../http/pictureTagAPI';
+import { deletePicturesTagsConnection } from '../../../http/picturesTagsApi';
 
 import { Context } from '../../../index';
 import getOptionsInfo from '../getOptionsInfo';
@@ -113,16 +114,21 @@ const PersonalPictureModalWindow = (props) => {
         formData.append('img', img);
         formData.append('info', JSON.stringify([...PictureInfo, ...newPictureInfo]));
         formData.append('tags', JSON.stringify([...PictureTags, ...newPictureTags]));
-        const response = await updatePicture(formData, pictureId);
         deletedPictureInfo.forEach(i => {
             deleteInfo(i.id);
         });
-        deletedPictureTags.forEach(t => {
-            deleteTag(t.id);
+        deletedPictureTags.forEach((t, i) => {
+            deletePicturesTagsConnection(pictureId, t.id);
+            if (i === deletedPictureTags.length - 1) {
+                console.log('FOREACH ENDED');
+
+            }
         });
+        const response = await updatePicture(formData, pictureId);
         getOnePicture(pictureId).then(data => {
             setCurrentPicture(data);
         });
+        console.log('NEW PICTURE UPDATED');
         alert(response);
     };
     useEffect(() => {

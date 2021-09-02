@@ -16,7 +16,7 @@ const User = sequelize.define('user', {
 const Picture = sequelize.define('picture', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     header: { type: DataTypes.STRING, allowNull: false },
-    description: { type: DataTypes.STRING },
+    description: { type: DataTypes.TEXT },
     img: { type: DataTypes.STRING, allowNull: false },
 });
 const Type = sequelize.define('type', {
@@ -33,7 +33,7 @@ const PictureTag = sequelize.define('picture_tag', {
 const PictureInfo = sequelize.define('picture_info', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     title: { type: DataTypes.STRING, allowNull: false },
-    description: { type: DataTypes.STRING, allowNull: false }
+    description: { type: DataTypes.TEXT, allowNull: false }
 });
 const Comment = sequelize.define('comment', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -48,6 +48,11 @@ const ReplyComment = sequelize.define('reply_comment', {
 });
 const ReplyCommentLike = sequelize.define('reply_comment_like', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+});
+
+// ПРОМЕЖУТОЧНАЯ ТАБЛИЦА
+const PicturesTags = sequelize.define('pictures_tags', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
 });
 
 
@@ -72,8 +77,8 @@ ReplyCommentLike.belongsTo(User);
 Picture.hasMany(PictureLike, { as: "likes" });
 PictureLike.belongsTo(Picture);
 
-Picture.hasMany(PictureTag, { as: "tags" });
-PictureTag.belongsTo(Picture);
+Picture.belongsToMany(PictureTag, { as: "tags", through: PicturesTags });
+PictureTag.belongsToMany(Picture, { through: PicturesTags });
 
 Picture.hasMany(PictureInfo, { as: "add_info" });
 PictureInfo.belongsTo(Picture);
@@ -103,5 +108,6 @@ module.exports = {
     Comment,
     CommentLike,
     ReplyComment,
-    ReplyCommentLike
+    ReplyCommentLike,
+    PicturesTags
 };

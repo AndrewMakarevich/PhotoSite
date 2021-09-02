@@ -1,5 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Context } from "../../../index";
+import React, { useState, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import PictureItem from '../../pictures/pictureItem';
 import PersonalPictureModalWindow from './personalPictureModalWindow';
@@ -15,14 +14,12 @@ const PersonalPictureList = observer((props) => {
     const [personalPictures, setPersonalPictures] = useState('');
     const [pictureId, setPictureId] = useState('');
     const [typeId, setTypeId] = useState('');
-    const [listLoading, setListLoading] = useState(true);
-    const { picture } = useContext(Context);
     useEffect(() => {
         showPictureModal();
     }, []);
     useEffect(() => {
         showPictureModal();
-        getPersonalPictures(userId, typeId).then(data => setPersonalPictures(data.rows)).finally(() => setListLoading(false));
+        getPersonalPictures(userId, typeId).then(data => setPersonalPictures(data.rows)).catch((e) => alert(e.response.data.message));
     }, [userId, typeId]);
     if (!userId) {
         return (

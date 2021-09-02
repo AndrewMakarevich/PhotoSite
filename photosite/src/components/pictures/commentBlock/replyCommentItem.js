@@ -3,16 +3,19 @@ import './replyCommentItem.css';
 import { Context } from "../../../index.js";
 import { deployReplyComment } from "../commentDeploymentScript";
 import { redactReplyComment } from "../commentRedactAnimationFunc";
+import ReplyCommentInputBlock from "./replyCommentInputBlock";
 import { getUser } from "../../../http/userAPI";
 import { postReplyCommentChanges, deleteReplyComment } from "../../../http/replyCommentAPI";
 import { likeReplyComment, getReplyCommentLikes } from "../../../http/replyCommentLikeAPI";
-const ReplyCommentItem = ({ replyComment }) => {
+const ReplyCommentItem = ({ replyComment, updateReplyCommentsList }) => {
     const { user } = useContext(Context);
     const [userInfo, setUserInfo] = useState({ user: { nickname: "Загружается" } });
     const [replyCommentChanges, setReplyCommentChanges] = useState('');
     const [replyCommentLikes, setReplyCommentLikes] = useState('');
     const [isLiked, setIsLiked] = useState();
     const [amountOfLikes, setAmountOfLikes] = useState('');
+
+    const [replyCommentInputState, setReplyCommentInputState] = useState('hidden');
 
     const getLikes = async (replyCommentId) => {
         try {
@@ -42,7 +45,7 @@ const ReplyCommentItem = ({ replyComment }) => {
 
     const likeReplyCommentFunction = async (replyCommentId) => {
         try {
-            const data = await likeReplyComment(replyCommentId);
+            await likeReplyComment(replyCommentId);
             return getLikes(replyCommentId);
         } catch (e) {
             alert(e.response.data.message);
@@ -55,6 +58,7 @@ const ReplyCommentItem = ({ replyComment }) => {
             const stringFullness = replyCommentChanges.split(' ').join('');
             if (stringFullness) {
                 const data = await postReplyCommentChanges(replyCommentId, text);
+                updateReplyCommentsList();
                 return alert(data.response);
             }
             return alert('Комментарий не изменен или пуст');
@@ -69,6 +73,7 @@ const ReplyCommentItem = ({ replyComment }) => {
             let answer = window.confirm('Вы уверены, что хотите удалить свой комментарий');
             if (answer) {
                 const data = await deleteReplyComment(replyCommentId);
+                updateReplyCommentsList();
                 return alert(data.response);
             }
             return;
@@ -77,6 +82,7 @@ const ReplyCommentItem = ({ replyComment }) => {
             return alert(e.response.data.message);
         }
     };
+
     useEffect(() => {
         getUser(replyComment.userId).then((data) => setUserInfo(data)).catch((e) => alert(e.response.data.message));
         getLikes(replyComment.id);
@@ -84,6 +90,7 @@ const ReplyCommentItem = ({ replyComment }) => {
     useEffect(() => {
         checkIfLikedFunction();
     }, [replyCommentLikes]);
+
     return (
         <div className="leavedReplyComments-replyCommentBlock">
             <section className="leavedReplyComments-replyCommentBlock_addInfo">
@@ -103,6 +110,9 @@ const ReplyCommentItem = ({ replyComment }) => {
                         <button className='replyCommentBlock__buttonsBlock-scaleCommentButton' onClick={(e) => deployReplyComment(e.target)}>Развернуть</button>
                         <button className="replyCommentBlock__buttonsBlock-redactButton" onClick={(e) => redactReplyComment(e.target)}>redact</button>
                         <button
+                            className="replyCommentBlock__buttonsBlock-createReplyCommentButton createReplyComment"
+                            onClick={() => !replyCommentInputState ? setReplyCommentInputState('hidden') : setReplyCommentInputState('')}>Ответить</button>
+                        <button
                             className="replyCommentBlock__buttonsBlock-postButton disabledButton"
                             onClick={() => postReplyCommentChangesFunction(replyComment.id, replyCommentChanges)}>
                             post changes
@@ -112,6 +122,11 @@ const ReplyCommentItem = ({ replyComment }) => {
                     :
                     <section>
                         <button className='replyCommentBlock__buttonsBlock-scaleCommentButton' onClick={(e) => deployReplyComment(e.target)}>Развернуть</button>
+                        <button
+                            className="replyCommentBlock__buttonsBlock-createReplyCommentButton createReplyComment"
+                            onClick={() => !replyCommentInputState ? setReplyCommentInputState('hidden') : setReplyCommentInputState('')}>
+                            Ответить
+                        </button>
                     </section>
                 }
                 <section className="replyCommentBlock__buttonsBlock-likeItem">
@@ -133,6 +148,7 @@ const ReplyCommentItem = ({ replyComment }) => {
                     <div className="amountOfLikesItem">{amountOfLikes}</div>
                 </section>
             </section>
+            <ReplyCommentInputBlock key={userInfo.user.nickname} state={replyCommentInputState} userInfo={userInfo} commentId={replyComment.commentId} updateReplyCommentsList={updateReplyCommentsList} />
         </div>
     )
 };

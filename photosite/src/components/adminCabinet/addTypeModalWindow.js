@@ -13,7 +13,7 @@ const AddTypeModalWindow = () => {
     const changeTypeFunction = (id, name, pictureId) => {
         setTypes(types.map(type => {
             if (type.id === id) {
-                return { ...type, ['name']: name }
+                return { ...type, 'name': name }
             }
             return type;
         }));
@@ -24,12 +24,13 @@ const AddTypeModalWindow = () => {
                 break;
             } else {
                 existence = false;
+                continue;
             }
         }
         if (existence) {
             setChangedTypes(changedTypes.map(type => {
                 if (type.id === id) {
-                    return { ...type, ['name']: name }
+                    return { ...type, 'name': name }
                 }
                 return type;
             }));

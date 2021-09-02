@@ -1,14 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
-import './commentsSection.css';
 import { observer } from 'mobx-react-lite';
+import './commentsSection.css';
 import { postComment, getPictureComments } from '../../http/commentsAPI';
 import { Context } from '../../index';
 import CommentItem from "./commentBlock/commentItem";
 
+
 const InfoAndCommentsContent = observer(({ picture, currentContent }) => {
-    const { user } = useContext(Context);
     const { pictureComments } = useContext(Context);
-    // const [comments, setComments] = useState([]);
     const [comment, setComment] = useState('');
 
     const postCommentFunction = async (text, pictureId) => {
@@ -84,9 +83,8 @@ const InfoAndCommentsContent = observer(({ picture, currentContent }) => {
                     {
                         (pictureComments._pictureComments.map((comment) => {
                             return (
-                                <CommentItem picture={picture} comment={comment} />
+                                <CommentItem key={comment.id} picture={picture} comment={comment} />
                             )
-
                         }))
                     }
                 </section>

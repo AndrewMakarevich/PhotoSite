@@ -1,11 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
+import './commentItem.css';
 import { observer } from 'mobx-react-lite';
 import { Context } from '../../../index';
-// import deployComment from '../commentDeploymentScript';
 import { deployComment } from '../commentDeploymentScript';
 import { redactComment } from '../commentRedactAnimationFunc';
-import { showReplyComments } from './showReplyComments';
 import ReplyCommentItem from './replyCommentItem';
+import ReplyCommentInputBlock from './replyCommentInputBlock';
 import { getUser } from '../../../http/userAPI';
 import { getPictureComments, postCommentChanges, deleteComment } from '../../../http/commentsAPI';
 import { likeComment, getCommentLikes } from '../../../http/commentLikeAPI';
@@ -21,6 +21,14 @@ const CommentItem = observer(({ picture, comment }) => {
     const [isLiked, setIsLiked] = useState('');
     const [userInfo, setUserInfo] = useState({ user: { nickname: "Загружается" } });
     const [replyComments, setReplyComments] = useState([]);
+
+    const [replyCommentsState, setReplyCommentsState] = useState('hidden');
+    const [replyCommentInputState, setReplyCommentInputState] = useState('hidden');
+
+    // ФУНКЦИЯ-БУМЕРАНГ ДЛЯ ОБНОВЛЕНИЯ КОММЕНТАРИЕВ
+    const updateReplyCommentsList = async () => {
+        getAllReplyComments(comment.id).then((data) => setReplyComments(data.rows)).catch((e) => alert(e));
+    };
 
 
     const deleteCommentFunction = async (id) => {
@@ -39,7 +47,7 @@ const CommentItem = observer(({ picture, comment }) => {
     };
     const likeCommentFunction = async (commentId) => {
         try {
-            const response = await likeComment(commentId);
+            await likeComment(commentId);
             getCommentLikesInfo(commentId);
         } catch (e) {
             return alert(e.response.data.message);
@@ -76,14 +84,16 @@ const CommentItem = observer(({ picture, comment }) => {
         return;
     };
 
+
     useEffect(() => {
         checkIfLikedFunction();
     }, [commentLikeInfo]);
     useEffect(() => {
-        getUser(comment.userId).then(data => setUserInfo(data)).catch((e) => alert(e.response.data.message));
-        getAllReplyComments(comment.id).then((data) => setReplyComments(data.rows)).catch((e) => alert(e));
+
     }, [comment]);
     useEffect(() => {
+        getUser(comment.userId).then(data => setUserInfo(data)).catch((e) => alert(e.response.data.message));
+        getAllReplyComments(comment.id).then((data) => setReplyComments(data.rows)).catch((e) => alert(e));
         getCommentLikesInfo(comment.id);
     }, []);
 
@@ -95,14 +105,50 @@ const CommentItem = observer(({ picture, comment }) => {
                     <div>{`${new Date(comment.createdAt).getFullYear()} ${new Date(comment.createdAt).getDate()} ${new Date(comment.createdAt).toLocaleString('default', { month: 'long' })}`}</div>
                 </section>
                 <textarea readOnly defaultValue={comment.text} className='leavedComments-commentBlock__comment' onChange={(e) => setChangedComment(e.target.value)} />
+
                 <section className="leavedComments-commentBlock__buttonsBlock">
-                    <section>
-                        <button className='leavedComments-scaleCommentButton' onClick={(e) => deployComment(e.target)}>Развернуть</button>
-                        <button onClick={(e) => redactComment(e.target)} className="leavedComments-commentBlock__redactButton">redact</button>
-                        <button className="leavedComments-commentBlock__postButton disabledButton" onClick={() => postCommentChangesFunction(comment.id)}>post changes</button>
-                        <button onClick={() => deleteCommentFunction(comment.id)}>delete</button>
-                        <button className="leavedComments-commentBlock__showReplyCommentsButton" onClick={(e) => showReplyComments(e.target)}>Ответы</button>
+                    <section className="buttonsBlock__formatButtons">
+                        <button className="leavedComments-commentBlock__deleteButton" onClick={() => deleteCommentFunction(comment.id)} >
+                            <svg version="1.1" width="25" height="25" viewBox="0 0 95 95" xmlns="http://www.w3.org/2000/svg">
+                                <g transform="translate(0 -952.36)">
+                                    <circle className="deleteIconBackground" cx="50" cy="1002.4" r="45.669" />
+                                    <g transform="matrix(.89701 0 0 .89701 4.7763 101.09)">
+                                        <rect x="36.146" y="987.36" width="28.54" height="42.168" ry="1.135" fill="#fff" />
+                                        <circle cx="50.329" cy="984.4" r="3.4095" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                                        <rect x="31.774" y="984.72" width="37.285" height="5.2808" ry="1.6759" fill="#fff" stroke="#ff8d8d" stroke-linecap="round" stroke-linejoin="round" stroke-width=".7783" />
+                                        <g transform="translate(-.086624 .64035)" fill="#ff8d8d">
+                                            <rect x="40.801" y="993.37" width="2.772" height="32.051" ry="1.386" />
+                                            <rect x="49.117" y="993.37" width="2.772" height="32.051" ry="1.386" />
+                                            <rect x="57.433" y="993.37" width="2.772" height="32.051" ry="1.386" />
+                                        </g>
+                                    </g>
+                                </g>
+                            </svg>
+                        </button>
+                        <button className='leavedComments-scaleCommentButton' onClick={(e) => deployComment(e.target)}></button>
+                        <button className="leavedComments-commentBlock__redactButton" onClick={(e) => redactComment(e.target)} >
+                            <svg xmlns="http://www.w3.org/2000/svg" height="26" width="26" viewBox="0 0 51 51">
+                                <path d="M9.6 40.4l2.5-9.9L27 15.6l7.4 7.4-14.9 14.9-9.9 2.5zm4.3-8.9l-1.5 6.1 6.1-1.5L31.6 23 27 18.4 13.9 31.5z" />
+                                <path d="M17.8 37.3c-.6-2.5-2.6-4.5-5.1-5.1l.5-1.9c3.2.8 5.7 3.3 6.5 6.5l-1.9.5z" />
+                                <path d="M29.298 19.287l1.414 1.414-13.01 13.02-1.414-1.412z" />
+                                <path d="M11 39l2.9-.7c-.3-1.1-1.1-1.9-2.2-2.2L11 39z" />
+                                <path d="M35 22.4L27.6 15l3-3 .5.1c3.6.5 6.4 3.3 6.9 6.9l.1.5-3.1 2.9zM30.4 15l4.6 4.6.9-.9c-.5-2.3-2.3-4.1-4.6-4.6l-.9.9z" />
+                            </svg>
+                        </button>
+                        <button className="leavedComments-commentBlock__postButton disabledButton" onClick={() => postCommentChangesFunction(comment.id)}>Изменить</button>
+
+                        <button className="leavedComments-commentBlock__showReplyCommentsButton" onClick={(e) => !replyCommentsState ? setReplyCommentsState('hidden') : setReplyCommentsState('')} >Ответы</button>
+                        <button
+                            className="leavedComments-commentBlock__createReplyCommentButton createReplyComment"
+                            onClick={() => {
+                                !replyCommentInputState ? setReplyCommentInputState('hidden') : setReplyCommentInputState('');
+                                setReplyCommentsState('');
+                            }
+                            }>
+                            Ответить
+                        </button>
                     </section>
+
                     <section className='commentBlock__buttonsBlock-likeItem'>
                         {
                             isLiked ?
@@ -120,19 +166,22 @@ const CommentItem = observer(({ picture, comment }) => {
                         }
                         <div className="amountOfLikesItem">{amountOfLikes}</div>
                     </section>
+
                 </section>
-                <section className="commentBlock-leavedReplyComments hidden">
+                <section className={`commentBlock-leavedReplyComments ${replyCommentsState}`}>
+                    <ReplyCommentInputBlock state={replyCommentInputState} userInfo={userInfo} commentId={comment.id} updateReplyCommentsList={updateReplyCommentsList} />
                     {
                         replyComments.map(replyComment => {
                             return (
-                                <ReplyCommentItem replyComment={replyComment} userInfo={userInfo} />
+                                <ReplyCommentItem key={replyComment.id} replyComment={replyComment} updateReplyCommentsList={updateReplyCommentsList} />
                             )
                         })
                     }
-
                 </section>
             </div>
+
             :
+
             <div className="leavedComments-commentBlock" key={comment.id}>
                 <section className="leavedComments-commentBlock_addInfo">
                     <div>{userInfo.user.nickname}</div>
@@ -140,9 +189,18 @@ const CommentItem = observer(({ picture, comment }) => {
                 </section>
                 <div className={`leavedComments-commentBlock__comment`}>{comment.text}</div>
                 <section className="leavedComments-commentBlock__buttonsBlock">
-                    <section>
-                        <button className='leavedComments-scaleCommentButton' onClick={(e) => deployComment(e.target)} > Развернуть</button>
-                        <button className="leavedComments-commentBlock__showReplyCommentsButton" onClick={(e) => showReplyComments(e.target)}>Ответы</button>
+                    <section className="buttonsBlock__formatButtons">
+                        <button className='leavedComments-scaleCommentButton' onClick={(e) => deployComment(e.target)} ></button>
+                        <button className="leavedComments-commentBlock__showReplyCommentsButton" onClick={(e) => !replyCommentsState ? setReplyCommentsState('hidden') : setReplyCommentsState('')}>Ответы</button>
+                        <button
+                            className="leavedComments-commentBlock__createReplyCommentButton createReplyComment"
+                            onClick={() => {
+                                !replyCommentInputState ? setReplyCommentInputState('hidden') : setReplyCommentInputState('');
+                                setReplyCommentsState('');
+                            }
+                            }>
+                            Ответить
+                        </button>
                     </section>
                     <section className='commentBlock__buttonsBlock-likeItem'>
                         {
@@ -162,11 +220,13 @@ const CommentItem = observer(({ picture, comment }) => {
                         <div className="amountOfLikesItem">{amountOfLikes}</div>
                     </section>
                 </section>
-                <section className="commentBlock-leavedReplyComments hidden">
+                <section className={`commentBlock-leavedReplyComments ${replyCommentsState}`}>
+                    <ReplyCommentInputBlock state={replyCommentInputState} userInfo={userInfo} commentId={comment.id} />
                     {
+
                         replyComments.map(replyComment => {
                             return (
-                                <ReplyCommentItem replyComment={replyComment} userInfo={userInfo} />
+                                <ReplyCommentItem key={replyComment.id} replyComment={replyComment} userInfo={userInfo} commentId={comment.id} />
                             )
                         })
                     }

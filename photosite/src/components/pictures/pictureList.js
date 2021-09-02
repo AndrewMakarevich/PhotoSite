@@ -10,13 +10,13 @@ import { getPictures } from '../../http/pictureAPI';
 
 
 
-const PictureList = observer((props) => {
+const PictureList = observer(({ type, userId }) => {
     const [pictureId, setPictureId] = useState('');
     const { picture } = useContext(Context);
     useEffect(() => {
         showPictureModal();
-        getPictures().then(data => picture.setPictures(data.rows));
-    }, []);
+        getPictures(userId, type).then(data => picture.setPictures(data.rows));
+    }, [type]);
 
     return (
         <>

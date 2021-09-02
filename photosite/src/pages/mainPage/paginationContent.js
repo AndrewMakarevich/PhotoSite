@@ -1,7 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './mainPage.css';
 import './aboutUs.css';
 import './gallery.css';
+import getOptionsInfo from '../../components/personalCabinet/getOptionsInfo';
+import PictureSearchPanel from '../../components/pictureSearchBlock/PictureSearchPanel';
 import scrollAnimation from './scrollAnimation';
 import { Context } from '../../index';
 import { getTypes } from '../../http/typeAPI';
@@ -13,6 +15,8 @@ import PictureList from '../../components/pictures/pictureList';
 
 
 const PaginationContent = observer((props) => {
+    const [type, setType] = useState('');
+    const [userId, setUserId] = useState('');
     const { aboutUs } = useContext(Context);
     const { picture } = useContext(Context);
     useEffect(() => {
@@ -24,14 +28,21 @@ const PaginationContent = observer((props) => {
         return (
             <>
                 <div className="mainPagePagination-content first">
-                    <select>
+                    <select onChange={(e) => {
+                        setType(getOptionsInfo(e.target, e.target.selectedIndex));
+                        if (e.target.selectedIndex === 0) {
+                            setType('');
+                        }
+                    }}>
+                        <option>Все</option>
                         {picture.type.map((type) => {
                             return (
-                                <option onClick={() => picture.setSelectedType(type)} key={type.id}>{type.name}</option>
+                                <option id={type.id} key={type.id}>{type.name}</option>
                             )
                         })}
                     </select>
-                    <PictureList />
+                    <PictureSearchPanel />
+                    <PictureList type={type} userId={userId} />
 
                 </div>
             </>

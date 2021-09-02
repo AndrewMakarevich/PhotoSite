@@ -7,7 +7,7 @@ export function deployComment(button) {
     if (commentTextBlock.classList.contains('fullSize')) {
         return commentTextBlock.style.height = `${commentTextBlock.scrollHeight}px`;
     }
-    return commentTextBlock.style.height = '75px';
+    return commentTextBlock.style.height = '45px';
 }
 export function deployReplyComment(button) {
     console.log('Reply comment scale');

@@ -2,7 +2,7 @@ import { $host, $authHost } from './index';
 
 
 export const getPictures = async (userId, typeId) => {
-    const { data } = await $host.get(`api/picture/`);
+    const { data } = await $host.get(`api/picture/?userId=${userId}&typeId=${typeId}`);
     return data;
 };
 export const getPersonalPictures = async (userId, typeId) => {

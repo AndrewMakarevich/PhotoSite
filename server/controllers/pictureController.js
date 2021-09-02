@@ -4,17 +4,24 @@ const jwt = require('jsonwebtoken');
 const ApiError = require('../error/ApiError');
 const fs = require('fs');
 
+const { Op } = require('sequelize');
+
 const { Picture } = require('../models/models');
 const { PictureInfo } = require('../models/models');
 const { PictureTag } = require('../models/models');
 const { PictureLike } = require('../models/models');
+const { PicturesTags } = require('../models/models');
 const { Comment, CommentLike } = require('../models/models');
+
+const PictureTagService = require('../service/pictureTagService');
+const PictureInfoService = require('../service/pictureInfoService');
 
 async function deleteAddPicturesTables(modelName, id) {
     await modelName.destroy({
         where: { pictureId: id }
     });
 }
+
 
 class PictureController {
     async create(req, res, next) {
@@ -42,11 +49,26 @@ class PictureController {
             }
             if (tags) {
                 tags = JSON.parse(tags);
-                tags.forEach(t => {
-                    PictureTag.create({
-                        text: t.text,
-                        pictureId: picture.id
+                tags.forEach(async (t) => {
+                    const text = t.text.split(' ').join('').toLowerCase();
+                    const existTag = await PictureTag.findOne({
+                        where: { text }
                     });
+                    if (existTag) {
+                        PicturesTags.create({
+                            pictureId: picture.id,
+                            pictureTagId: existTag.id
+                        });
+                    } else {
+                        const tag = await PictureTag.create({
+                            text
+                        });
+                        PicturesTags.create({
+                            pictureId: picture.id,
+                            pictureTagId: tag.id
+                        });
+                    }
+
                 });
             }
             return res.json(picture);
@@ -56,10 +78,51 @@ class PictureController {
     }
     async getAll(req, res) {
         try {
-            let { userId, typeId, limit, page } = req.query;
+            let { userId, typeId, text, limit, page } = req.query;
             page = page || 1;
             limit = limit || 9;
             let offset = page * limit - limit;
+            // ПОИСКОВАЯ СИСТЕМА
+            let equalTags = [];
+            if (text) {
+                const searchWordsArray = text.split(' ');
+                // Выборка тегов, содержащих поисковой текст в виде подстроки
+                for (let i = 0; i < searchWordsArray.length; i++) {
+                    const tags = await PictureTag.findAll({
+                        where: {
+                            text: {
+                                [Op.substring]: searchWordsArray[i]
+                            }
+                        }
+                    })
+                    if (tags) {
+                        tags.forEach(tag => {
+                            equalTags = [...equalTags, tag]
+                        })
+                    }
+                }
+                // return res.json({ equalTags });
+                let equalPicturesId = [];
+                if (equalTags) {
+                    for (let i = 0; i < equalTags.length; i++) {
+                        const equalPicturesTags = await PicturesTags.findAll(
+                            { where: { pictureTagId: equalTags[i].id } }
+                        )
+                        if (equalPicturesTags) {
+                            equalPicturesTags.forEach(pictureTagRelation => {
+                                if (!equalPicturesId.includes(pictureTagRelation.pictureId)) {
+                                    equalPicturesId = [...equalPicturesId, pictureTagRelation.pictureId]
+                                }
+                            });
+
+                        }
+                    };
+                    return res.json({ equalPicturesId, equalTags })
+                } else {
+                    return res.json('no')
+                }
+
+            }
 
             let pictures;
             if (!userId && !typeId) {
@@ -79,7 +142,7 @@ class PictureController {
             }
             return res.json(pictures);
         } catch (e) {
-            return res.json(ApiError.badRequest('Ошибка введенных данных'));
+            return res.json(ApiError.badRequest(`ERROR ${e}`));
         }
 
     }
@@ -110,7 +173,7 @@ class PictureController {
             }
             const pictureImageName = picture.img;
             await deleteAddPicturesTables(PictureInfo, id);
-            await deleteAddPicturesTables(PictureTag, id);
+            await deleteAddPicturesTables(PicturesTags, id);
             await deleteAddPicturesTables(PictureLike, id);
             await deleteAddPicturesTables(Comment, id)
             await CommentLike.destroy({
@@ -151,44 +214,10 @@ class PictureController {
                     { where: { id } }
                 )
                 if (info) {
-                    info = JSON.parse(info);
-                    console.log(info);
-                    info.forEach(i => {
-                        if (i.id) {
-                            PictureInfo.update(
-                                { title: i.title, description: i.description },
-                                { where: { id: i.id } }
-                            )
-                        } else if (i.number) {
-                            PictureInfo.create(
-                                {
-                                    title: i.title,
-                                    description: i.description,
-                                    pictureId: picture.id
-                                }
-                            )
-                        }
-
-                    })
+                    await PictureInfoService.createAndUpdate(info, picture.id);
                 }
                 if (tags) {
-                    tags = JSON.parse(tags);
-                    tags.forEach(t => {
-                        if (t.id) {
-                            PictureTag.update(
-                                { text: t.text },
-                                { where: { id: t.id } }
-                            )
-                        } else if (t.number) {
-                            PictureTag.create(
-                                {
-                                    text: t.text,
-                                    pictureId: picture.id
-                                }
-                            )
-                        }
-
-                    });
+                    await PictureTagService.createAndUpdate(tags, picture.id);
                 }
                 await fs.unlink(path.resolve(__dirname, '..', 'static', picturePreviousFile), () => {
                     return res.json({ message: "Работа успешно изменена 1" });
@@ -199,51 +228,15 @@ class PictureController {
                     { where: { id } }
                 )
                 if (info) {
-                    info = JSON.parse(info);
-                    console.log(info);
-                    info.forEach(i => {
-                        if (i.id) {
-                            PictureInfo.update(
-                                { title: i.title, description: i.description },
-                                { where: { id: i.id } }
-                            )
-                        } else if (i.number) {
-                            PictureInfo.create(
-                                {
-                                    title: i.title,
-                                    description: i.description,
-                                    pictureId: picture.id
-                                }
-                            )
-                        }
-
-                    })
+                    await PictureInfoService.createAndUpdate(info, picture.id);
                 }
-
                 if (tags) {
-                    tags = JSON.parse(tags);
-                    tags.forEach(t => {
-                        if (t.id) {
-                            PictureTag.update(
-                                { text: t.text },
-                                { where: { id: t.id } }
-                            )
-                        } else if (t.number) {
-                            PictureTag.create(
-                                {
-                                    text: t.text,
-                                    pictureId: picture.id
-                                }
-                            )
-                        }
-
-                    });
+                    await PictureTagService.createAndUpdate(tags, picture.id);
                 }
-
                 return res.json({ message: "Работа успешно изменена 2" });
             }
         } catch (e) {
-            return res.json(e.message)
+            next(e)
         }
     }
 }

@@ -1,4 +1,4 @@
-function getOptionsInfo(select, index){
+function getOptionsInfo(select, index) {
     const option = select.querySelectorAll('option')[index];
     return option.id;
 }

@@ -8,11 +8,10 @@ const LikeItem = ({ picture }) => {
     const [amountOfLikes, setAmountOfLikes] = useState('');
     const [likeInfo, setLikeInfo] = useState([]);
     const [likeButtonStatus, setLikeButtonStatus] = useState('');
-    console.log(likeInfo);
 
     const likeFunction = async (pictureId) => {
         try {
-            const response = await createLike(pictureId);
+            await createLike(pictureId);
         } catch (e) {
             alert(e.response.data.message);
         }

@@ -77,6 +77,9 @@ class CommentController {
             await CommentLike.destroy({
                 where: { commentId: id }
             });
+            await ReplyComment.destroy({
+                where: { commentId: id }
+            });
             await Comment.destroy({
                 where: { id, userId: tokenInfo.id }
             });
@@ -103,7 +106,7 @@ class CommentController {
                     { text },
                     { where: { id } }
                 );
-                return res.json('Комментарий успешно обновлен')
+                return res.json('Комментарий успешно обновлен');
             } else {
                 throw ApiError.badRequest('Вы не явялетесь автором этого комментария');
             }
