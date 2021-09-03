@@ -85,6 +85,7 @@ class PictureController {
             // ПОИСКОВАЯ СИСТЕМА
             let equalTags = [];
             if (text) {
+                text = text.toLowerCase();
                 const searchWordsArray = text.split(' ');
                 // Выборка тегов, содержащих поисковой текст в виде подстроки
                 for (let i = 0; i < searchWordsArray.length; i++) {

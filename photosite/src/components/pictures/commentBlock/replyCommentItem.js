@@ -79,7 +79,7 @@ const ReplyCommentItem = ({ replyComment, updateReplyCommentsList }) => {
             return;
 
         } catch (e) {
-            return alert(e.response.data.message);
+            return alert(e);
         }
     };
 

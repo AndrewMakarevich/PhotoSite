@@ -221,12 +221,12 @@ const CommentItem = observer(({ picture, comment }) => {
                     </section>
                 </section>
                 <section className={`commentBlock-leavedReplyComments ${replyCommentsState}`}>
-                    <ReplyCommentInputBlock state={replyCommentInputState} userInfo={userInfo} commentId={comment.id} />
+                    <ReplyCommentInputBlock state={replyCommentInputState} userInfo={userInfo} commentId={comment.id} updateReplyCommentsList={updateReplyCommentsList} />
                     {
 
                         replyComments.map(replyComment => {
                             return (
-                                <ReplyCommentItem key={replyComment.id} replyComment={replyComment} userInfo={userInfo} commentId={comment.id} />
+                                <ReplyCommentItem key={replyComment.id} replyComment={replyComment} userInfo={userInfo} commentId={comment.id} updateReplyCommentsList={updateReplyCommentsList} />
                             )
                         })
                     }
