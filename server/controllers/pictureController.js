@@ -97,13 +97,29 @@ class PictureController {
                     })
                     if (tags) {
                         tags.forEach(tag => {
-                            equalTags = [...equalTags, tag]
+
+                            let tagExistence;
+                            // Проверка наличия дубликатов
+                            for (let i = 0; i < equalTags.length; i++) {
+                                if (equalTags[i].id === tag.id) {
+                                    tagExistence = true;
+                                    break;
+                                } else {
+                                    tagExistence = false;
+                                    continue;
+                                }
+                            }
+                            // Избавление от дубликатов 
+                            if (!tagExistence) {
+                                equalTags = [...equalTags, tag]
+                            }
                         })
                     }
                 }
-                // return res.json({ equalTags });
-                let equalPicturesId = [];
+                // Поиск ID картин, имеющих связи с полученными тэгами
+
                 if (equalTags) {
+                    let equalPicturesId = [];
                     for (let i = 0; i < equalTags.length; i++) {
                         const equalPicturesTags = await PicturesTags.findAll(
                             { where: { pictureTagId: equalTags[i].id } }
@@ -117,7 +133,21 @@ class PictureController {
 
                         }
                     };
-                    return res.json({ equalPicturesId, equalTags })
+                    // return res.json({ equalPicturesId, equalTags })
+
+                    if (equalPicturesId) {
+                        let equalPictures = [];
+                        for (let i = 0; i < equalPicturesId.length; i++) {
+                            const pictures = await Picture.findAndCountAll(
+                                { where: { id: equalPicturesId[i] } }
+                            );
+                            pictures.rows.forEach(picture => {
+                                equalPictures = [...equalPictures, picture];
+                            })
+                        }
+                        return res.json({ count: equalPictures.length, rows: equalPictures });
+                    }
+
                 } else {
                     return res.json('no')
                 }
